@@ -12,14 +12,16 @@ import com.google.android.material.textfield.TextInputLayout
 import kotlin.math.ceil
 import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.ViewModelProvider
+import com.google.android.material.button.MaterialButton
 import java.util.Calendar
 
 class ExpensesForm : AppCompatActivity() {
     private lateinit var categoryInput: SuggestionEditTextContainer
     private lateinit var subcategoryInput: SuggestionEditTextContainer
-    private lateinit var costEditText: TextInputEditText
-    private lateinit var countEditText: TextInputEditText
-    private lateinit var dateEditText: TextInputEditText
+    private lateinit var costInput: SuggestionEditTextContainer
+    private lateinit var countInput: SuggestionEditTextContainer
+    private lateinit var dateInput: SuggestionEditTextContainer
+    private lateinit var submitButton: MaterialButton
 
     private lateinit var viewModel: ExpenseFormViewModel
 
@@ -42,6 +44,7 @@ class ExpensesForm : AppCompatActivity() {
         populateSuggestionContainer(subcategoryInput, subcatList)
 
         populateDatePicker()
+        populateSubmitButton()
     }
 
     private fun populateViewsReferences() {
@@ -57,14 +60,34 @@ class ExpensesForm : AppCompatActivity() {
             findViewById(R.id.subcategoryChipsContainer)
         )
 
-        costEditText = findViewById(R.id.costEditText)
-        countEditText = findViewById(R.id.countEditText)
-        dateEditText = findViewById(R.id.dateEditText)
+        costInput = SuggestionEditTextContainer(
+            findViewById(R.id.costEditText),
+            findViewById(R.id.costEditTextLayout),
+            null
+        )
+
+        countInput = SuggestionEditTextContainer(
+            findViewById(R.id.countEditText),
+            findViewById(R.id.countEditTextLayout),
+            null
+        )
+
+        dateInput = SuggestionEditTextContainer(
+            findViewById(R.id.dateEditText),
+            findViewById(R.id.dateEditTextLayout),
+            null
+        )
+
+        // Set the next view when next is pressed
+        costInput.editText.nextFocusDownId = R.id.countEditText
+        countInput.editText.nextFocusDownId = R.id.dateEditText
+
+        submitButton = findViewById(R.id.submitExpenseButton)
     }
 
     private fun populateSuggestionContainer(suggestionEditTextContainer: SuggestionEditTextContainer,
                                             chipsList: List<String>) {
-        populateChipsContainer(chipsList, suggestionEditTextContainer.chipsContainer) {
+        populateChipsContainer(chipsList, suggestionEditTextContainer.chipsContainer!!) {
             suggestionEditTextContainer.editText.setText(it)
             suggestionEditTextContainer.editText.setSelection(suggestionEditTextContainer.editText.length())
         }
@@ -76,7 +99,7 @@ class ExpensesForm : AppCompatActivity() {
                     matchList.add(item)
                 }
             }
-            populateChipsContainer(matchList, suggestionEditTextContainer.chipsContainer) {
+            populateChipsContainer(matchList, suggestionEditTextContainer.chipsContainer!!) {
                 suggestionEditTextContainer.editText.setText(it)
                 suggestionEditTextContainer.editText.setSelection(suggestionEditTextContainer.editText.length())
             }
@@ -132,10 +155,10 @@ class ExpensesForm : AppCompatActivity() {
                 calendar.set(Calendar.YEAR, year)
                 calendar.set(Calendar.MONTH, month)
                 calendar.set(Calendar.DAY_OF_MONTH, day)
-                dateEditText.setText(viewModel.getDateFormat().format(calendar.time))
+                dateInput.editText.setText(viewModel.getDateFormat().format(calendar.time))
             }
 
-        dateEditText.setOnClickListener {
+        dateInput.editText.setOnClickListener {
             DatePickerDialog(this,
                 dateSetListener,
                 calendar.get(Calendar.YEAR),
@@ -144,8 +167,49 @@ class ExpensesForm : AppCompatActivity() {
         }
     }
 
+    private fun populateSubmitButton() {
+        val verifyEditText: (SuggestionEditTextContainer) -> Boolean = {
+            if (it.editText.text.isNullOrEmpty()) {
+                it.editTextLayout.error = "Required Field"
+                it.editText.requestFocus()
+                false
+            }
+            else {
+                it.editTextLayout.error = null
+                true
+            }
+        }
+
+        submitButton.setOnClickListener {
+            val verifyThese = listOf(
+                { verifyEditText(categoryInput) }, { verifyEditText(subcategoryInput) },
+                { verifyEditText(costInput) }, { verifyEditText(countInput) }, { verifyEditText(dateInput) }
+            )
+
+            if(verifyThese.all { it() }) {
+                val categoryLiteral = categoryInput.editText.text.toString()
+                val subcategoryLiteral = subcategoryInput.editText.text.toString()
+                val costLiteral = costInput.editText.text.toString()
+                val countLiteral = countInput.editText.text.toString()
+                val dateLiteral = dateInput.editText.text.toString()
+
+                viewModel.submitExpense(categoryLiteral, subcategoryLiteral, costLiteral, countLiteral, dateLiteral)
+
+                // Clear all inputs
+                categoryInput.editText.text = null
+                subcategoryInput.editText.text = null
+                costInput.editText.text = null
+                countInput.editText.text = null
+                dateInput.editText.text = null
+
+                // Set focus on first edit text
+                categoryInput.editText.requestFocus()
+            }
+
+        }
+    }
 }
 data class SuggestionEditTextContainer(
     var editText: TextInputEditText,
     var editTextLayout: TextInputLayout,
-    var chipsContainer: LinearLayout)
+    var chipsContainer: LinearLayout?)

@@ -10,4 +10,10 @@ class ExpenseFormViewModel(app: Application): AndroidViewModel(app) {
     fun getDateFormat(): SimpleDateFormat {
         return SimpleDateFormat("dd/MM/yyyy", Locale.UK)
     }
+
+    fun submitExpense(inputCategory: String, inputSubcategory: String, inputCost: String,
+                      inputCount: String, inputDate: String)
+    {
+
+    }
 }
