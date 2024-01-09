@@ -19,4 +19,6 @@
     <string name="exit">Exit</string>
     <string name="cost">Cost</string>
     <string name="count">Count</string>
+    <string name="insert_expense_success">Expense Inserted Successfully</string>
+    <string name="insert_expense_failed">Error Inserting Expense</string>
 </resources>

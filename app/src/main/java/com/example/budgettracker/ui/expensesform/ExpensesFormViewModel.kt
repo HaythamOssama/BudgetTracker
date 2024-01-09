@@ -12,8 +12,8 @@ class ExpenseFormViewModel(app: Application): AndroidViewModel(app) {
     }
 
     fun submitExpense(inputCategory: String, inputSubcategory: String, inputCost: String,
-                      inputCount: String, inputDate: String)
+                      inputCount: String, inputDate: String): Boolean
     {
-
+        return false
     }
 }

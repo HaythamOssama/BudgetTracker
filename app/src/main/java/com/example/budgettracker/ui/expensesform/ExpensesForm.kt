@@ -1,10 +1,12 @@
 package com.example.budgettracker.ui.expensesform
 
 import android.app.DatePickerDialog
+import android.graphics.drawable.Drawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.ViewGroup
 import android.widget.LinearLayout
+import androidx.core.content.ContextCompat
 import com.example.budgettracker.R
 import com.google.android.material.chip.Chip
 import com.google.android.material.textfield.TextInputEditText
@@ -12,7 +14,14 @@ import com.google.android.material.textfield.TextInputLayout
 import kotlin.math.ceil
 import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
+import com.github.razir.progressbutton.attachTextChangeAnimator
+import com.github.razir.progressbutton.bindProgressButton
+import com.github.razir.progressbutton.hideDrawable
+import com.github.razir.progressbutton.showDrawable
 import com.google.android.material.button.MaterialButton
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import java.util.Calendar
 
 class ExpensesForm : AppCompatActivity() {
@@ -168,19 +177,26 @@ class ExpensesForm : AppCompatActivity() {
     }
 
     private fun populateSubmitButton() {
-        val verifyEditText: (SuggestionEditTextContainer) -> Boolean = {
-            if (it.editText.text.isNullOrEmpty()) {
-                it.editTextLayout.error = "Required Field"
-                it.editText.requestFocus()
-                false
-            }
-            else {
-                it.editTextLayout.error = null
-                true
-            }
+
+        bindProgressButton(submitButton)
+        submitButton.attachTextChangeAnimator {
+            fadeOutMills = 150
+            fadeInMills = 150
         }
 
         submitButton.setOnClickListener {
+            val verifyEditText: (SuggestionEditTextContainer) -> Boolean = {
+                if (it.editText.text.isNullOrEmpty()) {
+                    it.editTextLayout.error = "Required Field"
+                    it.editText.requestFocus()
+                    false
+                }
+                else {
+                    it.editTextLayout.error = null
+                    true
+                }
+            }
+
             val verifyThese = listOf(
                 { verifyEditText(categoryInput) }, { verifyEditText(subcategoryInput) },
                 { verifyEditText(costInput) }, { verifyEditText(countInput) }, { verifyEditText(dateInput) }
@@ -193,19 +209,44 @@ class ExpensesForm : AppCompatActivity() {
                 val countLiteral = countInput.editText.text.toString()
                 val dateLiteral = dateInput.editText.text.toString()
 
-                viewModel.submitExpense(categoryLiteral, subcategoryLiteral, costLiteral, countLiteral, dateLiteral)
+                val submitStatus = viewModel.submitExpense(categoryLiteral, subcategoryLiteral, costLiteral, countLiteral, dateLiteral)
+                lateinit var animatedDrawable: Drawable
 
-                // Clear all inputs
-                categoryInput.editText.text = null
-                subcategoryInput.editText.text = null
-                costInput.editText.text = null
-                countInput.editText.text = null
-                dateInput.editText.text = null
+                if (submitStatus) {
+                    // Clear all inputs
+                    categoryInput.editText.text = null
+                    subcategoryInput.editText.text = null
+                    costInput.editText.text = null
+                    countInput.editText.text = null
+                    dateInput.editText.text = null
 
-                // Set focus on first edit text
-                categoryInput.editText.requestFocus()
+                    // Set focus on first edit text
+                    categoryInput.editText.requestFocus()
+
+                    animatedDrawable = ContextCompat.getDrawable(this, R.drawable.tick_icon_raw)!!
+                    animatedDrawable.setBounds(0, 0, 40, 40)
+                }
+                else {
+                    animatedDrawable = ContextCompat.getDrawable(this, R.drawable.failed_icon_raw)!!
+                    animatedDrawable.setBounds(0, 0, 35, 40)
+                }
+
+                // Animate the button depending on the submit status
+                submitButton.showDrawable(animatedDrawable)  {
+                    buttonTextRes = if(submitStatus) R.string.insert_expense_success else R.string.insert_expense_failed
+
+                    submitButton.backgroundTintList = ContextCompat.getColorStateList(this@ExpensesForm,
+                        if(submitStatus) R.color.success else R.color.failed)
+
+                    textMarginPx = 10
+
+                    lifecycleScope.launch {
+                        delay(2000)
+                        submitButton.hideDrawable(R.string.submit_expense)
+                        submitButton.backgroundTintList = ContextCompat.getColorStateList(this@ExpensesForm, R.color.purple_200)
+                    }
+                }
             }
-
         }
     }
 }
