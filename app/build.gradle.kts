@@ -86,4 +86,6 @@ dependencies {
     // optional - Kotlin Extensions and Coroutines support for Room
     implementation("androidx.room:room-ktx:$roomVersion")
     implementation("androidx.compose.runtime:runtime-livedata:1.5.4")
+
+    implementation("com.github.razir.progressbutton:progressbutton:2.1.0")
 }

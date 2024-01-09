@@ -11,4 +11,12 @@
     <string name="menu_home">Home</string>
     <string name="menu_gallery">Gallery</string>
     <string name="menu_slideshow">Slideshow</string>
+    <string name="insert_expense">Insert Expense</string>
+    <string name="category">Category</string>
+    <string name="subcategory">Item Name</string>
+    <string name="date">Date</string>
+    <string name="submit_expense">Submit Expense</string>
+    <string name="exit">Exit</string>
+    <string name="cost">Cost</string>
+    <string name="count">Count</string>
 </resources>

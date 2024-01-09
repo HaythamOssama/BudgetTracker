@@ -1,5 +1,6 @@
 package com.example.budgettracker.ui
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import com.google.android.material.snackbar.Snackbar
@@ -13,6 +14,7 @@ import androidx.drawerlayout.widget.DrawerLayout
 import androidx.appcompat.app.AppCompatActivity
 import com.example.budgettracker.R
 import com.example.budgettracker.databinding.ActivityMainBinding
+import com.example.budgettracker.ui.expensesform.ExpensesForm
 
 class MainActivity : AppCompatActivity() {
 
@@ -27,9 +29,9 @@ class MainActivity : AppCompatActivity() {
 
         setSupportActionBar(binding.appBarMain.toolbar)
 
-        binding.appBarMain.fab.setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                .setAction("Action", null).show()
+        binding.appBarMain.fab.setOnClickListener {
+            val intent = Intent(this, ExpensesForm::class.java)
+            startActivity(intent)
         }
         val drawerLayout: DrawerLayout = binding.drawerLayout
         val navView: NavigationView = binding.navView
