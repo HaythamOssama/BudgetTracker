@@ -8,7 +8,7 @@ import java.util.Locale
 class ExpenseFormViewModel(app: Application): AndroidViewModel(app) {
 
     fun getDateFormat(): SimpleDateFormat {
-        return SimpleDateFormat("dd/MM/yyyy", Locale.UK)
+        return SimpleDateFormat("dd MMMM yyyy", Locale.UK)
     }
 
     fun submitExpense(inputCategory: String, inputSubcategory: String, inputCost: String,
