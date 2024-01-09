@@ -1,5 +1,6 @@
 package com.example.budgettracker.ui.expensesform
 
+import android.app.DatePickerDialog
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.ViewGroup
@@ -10,14 +11,24 @@ import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import kotlin.math.ceil
 import androidx.core.widget.addTextChangedListener
+import androidx.lifecycle.ViewModelProvider
+import java.util.Calendar
 
 class ExpensesForm : AppCompatActivity() {
     private lateinit var categoryInput: SuggestionEditTextContainer
     private lateinit var subcategoryInput: SuggestionEditTextContainer
+    private lateinit var costEditText: TextInputEditText
+    private lateinit var countEditText: TextInputEditText
+    private lateinit var dateEditText: TextInputEditText
+
+    private lateinit var viewModel: ExpenseFormViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_expenses_form)
+
+        viewModel = ViewModelProvider(this)[ExpenseFormViewModel::class.java]
+
         populateViewsReferences()
 
         /* TODO Remove these lists */
@@ -29,6 +40,8 @@ class ExpensesForm : AppCompatActivity() {
 
         populateSuggestionContainer(categoryInput, catList)
         populateSuggestionContainer(subcategoryInput, subcatList)
+
+        populateDatePicker()
     }
 
     private fun populateViewsReferences() {
@@ -43,6 +56,10 @@ class ExpensesForm : AppCompatActivity() {
             findViewById(R.id.subcategoryEditTextLayout),
             findViewById(R.id.subcategoryChipsContainer)
         )
+
+        costEditText = findViewById(R.id.costEditText)
+        countEditText = findViewById(R.id.countEditText)
+        dateEditText = findViewById(R.id.dateEditText)
     }
 
     private fun populateSuggestionContainer(suggestionEditTextContainer: SuggestionEditTextContainer,
@@ -106,6 +123,27 @@ class ExpensesForm : AppCompatActivity() {
         }
 
     }
+
+    private fun populateDatePicker() {
+        val calendar = Calendar.getInstance()
+
+        val dateSetListener =
+            DatePickerDialog.OnDateSetListener { _, year, month, day ->
+                calendar.set(Calendar.YEAR, year)
+                calendar.set(Calendar.MONTH, month)
+                calendar.set(Calendar.DAY_OF_MONTH, day)
+                dateEditText.setText(viewModel.getDateFormat().format(calendar.time))
+            }
+
+        dateEditText.setOnClickListener {
+            DatePickerDialog(this,
+                dateSetListener,
+                calendar.get(Calendar.YEAR),
+                calendar.get(Calendar.MONTH),
+                calendar.get(Calendar.DAY_OF_MONTH)).show()
+        }
+    }
+
 }
 data class SuggestionEditTextContainer(
     var editText: TextInputEditText,
