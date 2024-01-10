@@ -15,6 +15,7 @@ import kotlin.math.ceil
 import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import com.example.budgettracker.database.categories.Category
 import com.github.razir.progressbutton.attachTextChangeAnimator
 import com.github.razir.progressbutton.bindProgressButton
 import com.github.razir.progressbutton.hideDrawable
@@ -34,6 +35,8 @@ class ExpensesForm : AppCompatActivity() {
 
     private lateinit var viewModel: ExpenseFormViewModel
 
+    private var currentCategoriesList = listOf<Category>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_expenses_form)
@@ -41,17 +44,7 @@ class ExpensesForm : AppCompatActivity() {
         viewModel = ViewModelProvider(this)[ExpenseFormViewModel::class.java]
 
         populateViewsReferences()
-
-        /* TODO Remove these lists */
-        val catList = listOf("Category 1", "Category 2", "Category 3", "Category 4", "Category 5",
-            "Category 6", "Category 101")
-
-        val subcatList = listOf("Subcategory 1", "Subcategory 2", "Subcategory 3", "Subcategory 4", "Subcategory 5",
-            "Subcategory 6", "Subcategory 101")
-
-        populateSuggestionContainer(categoryInput, catList)
-        populateSuggestionContainer(subcategoryInput, subcatList)
-
+        observeCategories()
         populateDatePicker()
         populateSubmitButton()
     }
@@ -220,6 +213,7 @@ class ExpensesForm : AppCompatActivity() {
                         costInput.editText.text = null
                         countInput.editText.text = null
                         dateInput.editText.text = null
+                        subcategoryInput.chipsContainer!!.removeAllViews()
 
                         // Set focus on first edit text
                         categoryInput.editText.requestFocus()
@@ -251,7 +245,30 @@ class ExpensesForm : AppCompatActivity() {
             }
         }
     }
+
+    private fun observeCategories() {
+        viewModel.allCategories.observe(this) { rawCategories ->
+            val parsedCategories = viewModel.parseRawCategories(rawCategories)
+            val parsedCategoriesLiterals = parsedCategories.map {it.name}
+            currentCategoriesList = parsedCategories
+            populateSuggestionContainer(categoryInput, parsedCategoriesLiterals)
+        }
+
+        categoryInput.editText.addTextChangedListener {newText ->
+            for (category in currentCategoriesList) {
+                if (category.name == newText.toString()) {
+                    populateSuggestionContainer(subcategoryInput, category.subcategories.map {it.name})
+                    break
+                }
+            }
+
+            if (newText.toString().isEmpty()) {
+                subcategoryInput.chipsContainer!!.removeAllViews()
+            }
+        }
+    }
 }
+
 data class SuggestionEditTextContainer(
     var editText: TextInputEditText,
     var editTextLayout: TextInputLayout,

@@ -12,6 +12,7 @@ import java.util.Locale
 class ExpenseFormViewModel(app: Application): AndroidViewModel(app) {
 
     private val repo = DatabaseRepo(app)
+    val allCategories = repo.allCategories
 
     fun getDateFormat(): SimpleDateFormat {
         return SimpleDateFormat("dd MMMM yyyy", Locale.UK)
@@ -44,5 +45,9 @@ class ExpenseFormViewModel(app: Application): AndroidViewModel(app) {
             count = inputCount.toDouble(), date = inputDate)
 
         return repo.insertExpense(expense)
+    }
+
+    fun parseRawCategories(rawCategories: Map<Category, List<Subcategory>>): List<Category>{
+        return repo.getParsedCategories(rawCategories)
     }
 }
