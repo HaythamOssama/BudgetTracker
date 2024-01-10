@@ -69,13 +69,6 @@ class DatabaseRepo(context: Context, initializedDatabase: TestingAppDatabase? = 
     }
 
     @WorkerThread
-    suspend fun getSubcategoriesByCategory(category: Category) : List<Subcategory> {
-        val subcategories = subcategoryDao.get(category.id.toLong())
-        subcategories.forEach { it.category = category }
-        return subcategories
-    }
-
-    @WorkerThread
     suspend fun deleteSubcategory(subcategory: Subcategory): Boolean{
         return subcategoryDao.delete(subcategory) > 0
     }

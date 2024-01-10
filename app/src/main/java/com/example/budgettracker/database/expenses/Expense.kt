@@ -5,7 +5,6 @@ import androidx.room.ForeignKey
 import androidx.room.Ignore
 import androidx.room.PrimaryKey
 import com.example.budgettracker.database.subcategory.Subcategory
-import java.time.LocalDate
 
 @Entity(tableName = "Expenses",
     foreignKeys = [
