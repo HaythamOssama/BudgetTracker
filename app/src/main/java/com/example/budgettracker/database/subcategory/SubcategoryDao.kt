@@ -17,10 +17,10 @@ interface SubcategoryDao {
     fun getAllLive(): LiveData<Map<Subcategory, List<Category>>>
 
     @Query("SELECT * FROM Subcategories where name = :name")
-    suspend fun get(name: String): Subcategory
+    suspend fun get(name: String): Subcategory?
 
     @Query("SELECT * FROM Subcategories where id = :id")
-    suspend fun get(id: Int): Subcategory
+    suspend fun get(id: Int): Subcategory?
 
     @Query("SELECT * FROM Subcategories where categoryId = :categoryId")
     suspend fun get(categoryId: Long): List<Subcategory>

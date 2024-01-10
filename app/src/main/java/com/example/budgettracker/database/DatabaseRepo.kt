@@ -27,7 +27,7 @@ class DatabaseRepo(context: Context, initializedDatabase: TestingAppDatabase? = 
     }
 
     @WorkerThread
-    suspend fun getCategoryByName(categoryName: String): Category {
+    suspend fun getCategoryByName(categoryName: String): Category? {
         val category = categoryDao.get(categoryName)
         if (category != null) {
             category.subcategories = subcategoryDao.get(category.id.toLong())
@@ -60,7 +60,7 @@ class DatabaseRepo(context: Context, initializedDatabase: TestingAppDatabase? = 
     }
 
     @WorkerThread
-    suspend fun getSubcategoryByName(name: String): Subcategory {
+    suspend fun getSubcategoryByName(name: String): Subcategory? {
         val subcategory = subcategoryDao.get(name)
         if (subcategory != null) {
             subcategory.category = categoryDao.get(subcategory.categoryId)
