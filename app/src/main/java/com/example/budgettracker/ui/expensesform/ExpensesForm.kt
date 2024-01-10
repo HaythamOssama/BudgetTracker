@@ -209,41 +209,43 @@ class ExpensesForm : AppCompatActivity() {
                 val countLiteral = countInput.editText.text.toString()
                 val dateLiteral = dateInput.editText.text.toString()
 
-                val submitStatus = viewModel.submitExpense(categoryLiteral, subcategoryLiteral, costLiteral, countLiteral, dateLiteral)
-                lateinit var animatedDrawable: Drawable
+                lifecycleScope.launch {
+                    val submitStatus = viewModel.submitExpense(categoryLiteral, subcategoryLiteral, costLiteral, countLiteral, dateLiteral)
+                    lateinit var animatedDrawable: Drawable
 
-                if (submitStatus) {
-                    // Clear all inputs
-                    categoryInput.editText.text = null
-                    subcategoryInput.editText.text = null
-                    costInput.editText.text = null
-                    countInput.editText.text = null
-                    dateInput.editText.text = null
+                    if (submitStatus) {
+                        // Clear all inputs
+                        categoryInput.editText.text = null
+                        subcategoryInput.editText.text = null
+                        costInput.editText.text = null
+                        countInput.editText.text = null
+                        dateInput.editText.text = null
 
-                    // Set focus on first edit text
-                    categoryInput.editText.requestFocus()
+                        // Set focus on first edit text
+                        categoryInput.editText.requestFocus()
 
-                    animatedDrawable = ContextCompat.getDrawable(this, R.drawable.tick_icon_raw)!!
-                    animatedDrawable.setBounds(0, 0, 40, 40)
-                }
-                else {
-                    animatedDrawable = ContextCompat.getDrawable(this, R.drawable.failed_icon_raw)!!
-                    animatedDrawable.setBounds(0, 0, 35, 40)
-                }
+                        animatedDrawable = ContextCompat.getDrawable(this@ExpensesForm, R.drawable.tick_icon_raw)!!
+                        animatedDrawable.setBounds(0, 0, 40, 40)
+                    }
+                    else {
+                        animatedDrawable = ContextCompat.getDrawable(this@ExpensesForm, R.drawable.failed_icon_raw)!!
+                        animatedDrawable.setBounds(0, 0, 35, 40)
+                    }
 
-                // Animate the button depending on the submit status
-                submitButton.showDrawable(animatedDrawable)  {
-                    buttonTextRes = if(submitStatus) R.string.insert_expense_success else R.string.insert_expense_failed
+                    // Animate the button depending on the submit status
+                    submitButton.showDrawable(animatedDrawable)  {
+                        buttonTextRes = if(submitStatus) R.string.insert_expense_success else R.string.insert_expense_failed
 
-                    submitButton.backgroundTintList = ContextCompat.getColorStateList(this@ExpensesForm,
-                        if(submitStatus) R.color.success else R.color.failed)
+                        submitButton.backgroundTintList = ContextCompat.getColorStateList(this@ExpensesForm,
+                            if(submitStatus) R.color.success else R.color.failed)
 
-                    textMarginPx = 10
+                        textMarginPx = 10
 
-                    lifecycleScope.launch {
-                        delay(2000)
-                        submitButton.hideDrawable(R.string.submit_expense)
-                        submitButton.backgroundTintList = ContextCompat.getColorStateList(this@ExpensesForm, R.color.purple_200)
+                        lifecycleScope.launch {
+                            delay(2000)
+                            submitButton.hideDrawable(R.string.submit_expense)
+                            submitButton.backgroundTintList = ContextCompat.getColorStateList(this@ExpensesForm, R.color.purple_200)
+                        }
                     }
                 }
             }
