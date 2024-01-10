@@ -18,15 +18,15 @@ data class Expense(
     @PrimaryKey(autoGenerate = true)
     var id: Int = 0,
     var subcategoryId: Long,
-    var date: LocalDate,
-    var count: Double,
     var cost: Double,
+    var count: Double,
+    var date: String,
 ) {
     @Ignore
     var subcategory: Subcategory?= null
 
     override fun toString(): String {
         return String.format("Expense: [%s] [count: %s] [cost: %s] [date: %s] [%s]",
-            id, count, cost, date.toString(), subcategory.toString())
+            id, count, cost, date, subcategory.toString())
     }
 }

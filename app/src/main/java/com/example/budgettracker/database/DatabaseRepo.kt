@@ -27,7 +27,7 @@ class DatabaseRepo(context: Context, initializedDatabase: TestingAppDatabase? = 
     }
 
     @WorkerThread
-    suspend fun getCategoryByName(categoryName: String): Category {
+    suspend fun getCategoryByName(categoryName: String): Category? {
         val category = categoryDao.get(categoryName)
         if (category != null) {
             category.subcategories = subcategoryDao.get(category.id.toLong())
@@ -60,9 +60,11 @@ class DatabaseRepo(context: Context, initializedDatabase: TestingAppDatabase? = 
     }
 
     @WorkerThread
-    suspend fun getSubcategoryByName(name: String): Subcategory {
+    suspend fun getSubcategoryByName(name: String): Subcategory? {
         val subcategory = subcategoryDao.get(name)
-        subcategory.category = categoryDao.get(subcategory.categoryId)
+        if (subcategory != null) {
+            subcategory.category = categoryDao.get(subcategory.categoryId)
+        }
         return subcategory
     }
 
@@ -80,8 +82,8 @@ class DatabaseRepo(context: Context, initializedDatabase: TestingAppDatabase? = 
 
     /*********** Expenses Entity Functions ***********/
     @WorkerThread
-    suspend fun insertExpense(expense: Expense): Long {
-        return expenseDao.insert(expense)
+    suspend fun insertExpense(expense: Expense): Boolean {
+        return expenseDao.insert(expense) > 0
     }
 
     @WorkerThread
