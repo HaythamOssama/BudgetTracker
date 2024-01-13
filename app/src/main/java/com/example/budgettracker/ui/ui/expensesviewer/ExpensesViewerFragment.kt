@@ -12,9 +12,11 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.ernestoyaquello.dragdropswiperecyclerview.DragDropSwipeRecyclerView
 import com.ernestoyaquello.dragdropswiperecyclerview.listener.OnItemSwipeListener
+import com.ernestoyaquello.dragdropswiperecyclerview.listener.OnListScrollListener
 import com.example.budgettracker.R
 import com.example.budgettracker.database.expenses.Expense
 import com.example.budgettracker.databinding.FragmentExpensesViewerBinding
+import com.example.budgettracker.ui.MainActivity
 import com.example.budgettracker.ui.expensesform.ExpensesForm
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.coroutines.launch
@@ -45,7 +47,34 @@ class ExpensesViewerFragment : Fragment() {
             }
         }
 
+        binding.fabInsertExpense.setOnClickListener {
+            val intent = Intent(requireContext(), ExpensesForm::class.java)
+            intent.putExtra("Action", "Insert")
+            startActivity(intent)
+        }
+
+        binding.list.scrollListener = onListScrollListener
         return binding.root
+    }
+
+    private val onListScrollListener = object : OnListScrollListener {
+        override fun onListScrollStateChanged(scrollState: OnListScrollListener.ScrollState) {
+        }
+
+        override fun onListScrolled(scrollDirection: OnListScrollListener.ScrollDirection, distance: Int) {
+            if (scrollDirection == OnListScrollListener.ScrollDirection.DOWN &&
+                (requireActivity() as MainActivity).isBottomNavBarVisible())
+            {
+                (requireActivity() as MainActivity).hideBottomNavBar()
+                binding.fabInsertExpense.hide()
+            }
+            else if (scrollDirection == OnListScrollListener.ScrollDirection.UP &&
+                !(requireActivity() as MainActivity).isBottomNavBarVisible())
+            {
+                (requireActivity() as MainActivity).showBottomNavBar()
+                binding.fabInsertExpense.show()
+            }
+        }
     }
 
     override fun onDestroyView() {
