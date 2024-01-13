@@ -6,6 +6,7 @@ import androidx.room.Ignore
 import androidx.room.Index
 import androidx.room.PrimaryKey
 import com.example.budgettracker.database.categories.Category
+import java.io.Serializable
 
 @Entity(tableName = "Subcategories",
     indices = [
@@ -21,12 +22,12 @@ data class Subcategory(
     var id: Int = 0,
     var categoryId: Long,
     var name: String,
-) {
+) : Serializable {
     @Ignore
     var category: Category?= null
 
     override fun toString(): String {
-        return String.format("Subcategory [%s] [%s] -> [%s]\n", id, name, category.toString())
+        return String.format("Subcategory [%s] [%s] -> [Category: (%s) %s]\n", id, name, category!!.id.toString(), category!!.name)
     }
 
 }

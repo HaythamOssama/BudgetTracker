@@ -15,7 +15,8 @@
         android:text="@string/insert_expense"
         android:textSize="30sp"
         android:textStyle="bold"
-        android:layout_marginBottom="10dp"/>
+        android:layout_marginBottom="10dp"
+        android:id="@+id/headerTextView"/>
 
     <!-- Category Container -->
     <LinearLayout

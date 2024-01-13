@@ -30,6 +30,7 @@ class MainActivity : AppCompatActivity() {
 
         binding.appBarMain.fab.setOnClickListener {
             val intent = Intent(this, ExpensesForm::class.java)
+            intent.putExtra("Action", "Insert")
             startActivity(intent)
         }
         val drawerLayout: DrawerLayout = binding.drawerLayout

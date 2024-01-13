@@ -1,5 +1,7 @@
 package com.example.budgettracker.ui.ui.expensesviewer
 
+import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -13,6 +15,7 @@ import com.ernestoyaquello.dragdropswiperecyclerview.listener.OnItemSwipeListene
 import com.example.budgettracker.R
 import com.example.budgettracker.database.expenses.Expense
 import com.example.budgettracker.databinding.FragmentExpensesViewerBinding
+import com.example.budgettracker.ui.expensesform.ExpensesForm
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.coroutines.launch
 
@@ -79,8 +82,30 @@ class ExpensesViewerFragment : Fragment() {
                     }
                     .show()
             }
+            else {
+                val intent = Intent(requireContext(), ExpensesForm::class.java)
+                intent.putExtra("Action", "Edit")
+                intent.putExtra("Expense", item)
+                startActivity(intent)
+            }
             return false
         }
     }
 
+
+    @SuppressLint("NotifyDataSetChanged")
+    override fun onResume() {
+        // Reload the items whenever this activity is resumed
+        if(binding.list.adapter != null) {
+            lifecycleScope.launch {
+                val unparsedExpenses = viewModel.allExpenses.value!!
+                val parsedExpenses = viewModel.parseExpenses(unparsedExpenses)
+                if (binding.list.adapter == null) {
+                    binding.list.adapter = ExpensesViewerAdapter(parsedExpenses)
+                }
+                (binding.list.adapter as ExpensesViewerAdapter).updateDataSet(parsedExpenses)
+            }
+        }
+        super.onResume()
+    }
 }
