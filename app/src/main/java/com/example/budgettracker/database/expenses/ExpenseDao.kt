@@ -16,7 +16,7 @@ interface ExpenseDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insert(expense: Expense): Long
 
-    @Query("SELECT * FROM EXPENSES INNER JOIN Subcategories ON Subcategories.id = Expenses.subcategoryId INNER JOIN Categories ON Categories.id = Subcategories.categoryId")
+    @Query("SELECT * FROM EXPENSES LEFT JOIN Subcategories ON Subcategories.id = Expenses.subcategoryId INNER JOIN Categories ON Categories.id = Subcategories.categoryId")
     fun getAllLive(): LiveData<Map<Expense, Map<Subcategory, Category>>>
 
     @Query("SELECT * FROM EXPENSES INNER JOIN Subcategories ON Subcategories.id = Expenses.subcategoryId INNER JOIN Categories ON Categories.id = Subcategories.categoryId where Expenses.id = :id")
