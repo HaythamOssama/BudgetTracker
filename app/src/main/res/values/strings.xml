@@ -21,4 +21,7 @@
     <string name="count">Count</string>
     <string name="insert_expense_success">Expense Inserted Successfully</string>
     <string name="insert_expense_failed">Error Inserting Expense</string>
+    <string name="menu_expenses_viewer">Expenses Viewer</string>
+    <string name="delete_expense">Delete Expense</string>
+    <string name="edit_expense">Edit Expense</string>
 </resources>

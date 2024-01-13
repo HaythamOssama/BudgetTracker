@@ -30,6 +30,7 @@ class MainActivity : AppCompatActivity() {
 
         binding.appBarMain.fab.setOnClickListener {
             val intent = Intent(this, ExpensesForm::class.java)
+            intent.putExtra("Action", "Insert")
             startActivity(intent)
         }
         val drawerLayout: DrawerLayout = binding.drawerLayout
@@ -39,7 +40,7 @@ class MainActivity : AppCompatActivity() {
         // menu should be considered as top level destinations.
         appBarConfiguration = AppBarConfiguration(
             setOf(
-                R.id.nav_home, R.id.nav_gallery, R.id.nav_slideshow
+                R.id.nav_expenses_viewer, R.id.nav_gallery, R.id.nav_slideshow
             ), drawerLayout
         )
         setupActionBarWithNavController(navController, appBarConfiguration)

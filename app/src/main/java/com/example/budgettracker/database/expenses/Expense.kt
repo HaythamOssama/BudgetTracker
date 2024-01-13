@@ -5,6 +5,7 @@ import androidx.room.ForeignKey
 import androidx.room.Ignore
 import androidx.room.PrimaryKey
 import com.example.budgettracker.database.subcategory.Subcategory
+import java.io.Serializable
 
 @Entity(tableName = "Expenses",
     foreignKeys = [
@@ -20,7 +21,7 @@ data class Expense(
     var cost: Double,
     var count: Double,
     var date: String,
-) {
+) : Serializable {
     @Ignore
     var subcategory: Subcategory?= null
 

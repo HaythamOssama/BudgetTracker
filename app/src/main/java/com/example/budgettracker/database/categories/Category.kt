@@ -5,6 +5,7 @@ import androidx.room.Ignore
 import androidx.room.Index
 import androidx.room.PrimaryKey
 import com.example.budgettracker.database.subcategory.Subcategory
+import java.io.Serializable
 
 @Entity(tableName = "Categories", indices = [
     Index(value = ["name"], unique = true) ])
@@ -12,7 +13,7 @@ data class Category (
     @PrimaryKey(autoGenerate = true)
     var id: Int = 0,
     var name: String
-) {
+) : Serializable {
     @Ignore
     var subcategories: List<Subcategory> = mutableListOf()
 

@@ -50,4 +50,10 @@ class ExpenseFormViewModel(app: Application): AndroidViewModel(app) {
     fun parseRawCategories(rawCategories: Map<Category, List<Subcategory>>): List<Category>{
         return repo.getParsedCategories(rawCategories)
     }
+
+    suspend fun editExpense(expense: Expense, inputCategory: String, inputSubcategory: String,
+                            inputCost: String, inputCount: String, inputDate: String): Boolean
+    {
+        return repo.updateExpense(expense,inputCategory, inputSubcategory, inputCost, inputCount, inputDate)
+    }
 }

@@ -5,6 +5,7 @@ import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
+import androidx.room.Update
 import com.example.budgettracker.database.categories.Category
 import com.example.budgettracker.utils.VisibleForTestingOnly
 
@@ -24,6 +25,9 @@ interface SubcategoryDao {
 
     @Query("SELECT * FROM Subcategories where categoryId = :categoryId")
     suspend fun get(categoryId: Long): List<Subcategory>
+
+    @Update
+    suspend fun update(subcategory: Subcategory): Int
 
     @Delete
     suspend fun delete(subcategory: Subcategory): Int

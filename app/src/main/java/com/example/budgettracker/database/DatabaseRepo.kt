@@ -69,6 +69,11 @@ class DatabaseRepo(context: Context, initializedDatabase: TestingAppDatabase? = 
     }
 
     @WorkerThread
+    suspend fun updateSubcategory(subcategory: Subcategory) : Boolean {
+        return subcategoryDao.update(subcategory) > 0
+    }
+
+    @WorkerThread
     suspend fun deleteSubcategory(subcategory: Subcategory): Boolean{
         return subcategoryDao.delete(subcategory) > 0
     }
@@ -97,6 +102,10 @@ class DatabaseRepo(context: Context, initializedDatabase: TestingAppDatabase? = 
             expense.subcategory = item.value.keys.elementAt(0)
             expense.subcategory!!.category = item.value.values.elementAt(0)
             expense.subcategory!!.category!!.subcategories = subcategoryDao.get(expense.subcategory!!.category!!.id.toLong())
+            for (subcategory in expense.subcategory!!.category!!.subcategories) {
+                subcategory.category = expense.subcategory!!.category
+            }
+
             expensesList.add(expense)
         }
 
@@ -104,11 +113,35 @@ class DatabaseRepo(context: Context, initializedDatabase: TestingAppDatabase? = 
     }
 
     @WorkerThread
-    suspend fun updateExpense(expense: Expense): Boolean {
-        /* If the subcategory changed, make sure that the subcategory ID exists */
-        if (subcategoryDao.get(expense.id) != null) {
-            return false
+    suspend fun updateExpense(expense: Expense, inputCategory: String, inputSubcategory: String,
+                              inputCost: String, inputCount: String, inputDate: String): Boolean
+    {
+        val isCategorySame = expense.subcategory!!.category!!.name == inputCategory
+        val isSubcategorySame = expense.subcategory!!.name == inputSubcategory
+        var categoryId: Long = expense.subcategory!!.category!!.id.toLong()
+        var subcategoryId: Long = expense.subcategoryId
+
+        expense.cost = inputCost.toDouble()
+        expense.count = inputCount.toDouble()
+        expense.date = inputDate
+
+        if(!isCategorySame) {
+            val category = getCategoryByName(inputCategory)
+            categoryId = category?.id?.toLong() ?: insertCategory(Category(name = inputCategory))
+
+            if(isSubcategorySame) {
+                expense.subcategory!!.categoryId = categoryId
+                updateSubcategory(expense.subcategory!!)
+            }
         }
+
+        if(!isSubcategorySame) {
+            val subcategory = getSubcategoryByName(inputSubcategory)
+            subcategoryId = subcategory?.id?.toLong() ?: insertSubcategory(Subcategory(name = inputSubcategory, categoryId = categoryId))
+        }
+
+        expense.subcategoryId = subcategoryId
+
         return expenseDao.update(expense) > 0
     }
 
