@@ -3,6 +3,8 @@ package com.example.budgettracker.ui.ui.expensesviewer
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -28,22 +30,18 @@ class ExpensesViewerFragment : Fragment() {
 
     private lateinit var viewModel: ExpensesViewerViewModel
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View
+    {
         viewModel = ViewModelProvider(this)[ExpensesViewerViewModel::class.java]
         _binding = FragmentExpensesViewerBinding.inflate(inflater, container, false)
         styleRecyclerView()
 
+        observeSearchEditText()
+
         viewModel.allExpenses.observe (requireActivity()) {unparsedExpenses ->
             lifecycleScope.launch {
                 val parsedExpenses = viewModel.parseExpenses(unparsedExpenses)
-                if (binding.list.adapter == null) {
-                    binding.list.adapter = ExpensesViewerAdapter(parsedExpenses)
-                }
-                (binding.list.adapter as ExpensesViewerAdapter).updateDataSet(parsedExpenses)
+                reloadRecyclerView(parsedExpenses)
             }
         }
 
@@ -55,6 +53,34 @@ class ExpensesViewerFragment : Fragment() {
 
         binding.list.scrollListener = onListScrollListener
         return binding.root
+    }
+
+    private fun observeSearchEditText() {
+        binding.searchView.searchEditText.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                lifecycleScope.launch {
+                    if(s.toString().isNotEmpty()) {
+                        val currentExpenses = viewModel.allExpenses.value!!
+                        val matchesList = mutableListOf<Expense>()
+                        for (expense in viewModel.parseExpenses(currentExpenses)) {
+                            if(expense.isStringPresent(s.toString())) {
+                                matchesList.add(expense)
+                            }
+                        }
+                        reloadRecyclerView(matchesList)
+                    }
+                    else {
+                        reloadRecyclerView(viewModel.parseExpenses(viewModel.allExpenses.value!!))
+                    }
+                }
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+            }
+        })
     }
 
     private val onListScrollListener = object : OnListScrollListener {
@@ -129,12 +155,17 @@ class ExpensesViewerFragment : Fragment() {
             lifecycleScope.launch {
                 val unparsedExpenses = viewModel.allExpenses.value!!
                 val parsedExpenses = viewModel.parseExpenses(unparsedExpenses)
-                if (binding.list.adapter == null) {
-                    binding.list.adapter = ExpensesViewerAdapter(parsedExpenses)
-                }
-                (binding.list.adapter as ExpensesViewerAdapter).updateDataSet(parsedExpenses)
+                reloadRecyclerView(parsedExpenses)
             }
         }
         super.onResume()
     }
+
+    private fun reloadRecyclerView(expensesList: List<Expense>) {
+        if (binding.list.adapter == null) {
+            binding.list.adapter = ExpensesViewerAdapter(expensesList)
+        }
+        (binding.list.adapter as ExpensesViewerAdapter).updateDataSet(expensesList)
+    }
+
 }
