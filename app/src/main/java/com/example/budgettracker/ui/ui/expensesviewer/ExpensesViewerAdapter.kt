@@ -36,4 +36,9 @@ class ExpensesViewerAdapter(dataSet: List<Expense> = emptyList()) : DragDropSwip
         super.dataSet = newList
         notifyDataSetChanged()
     }
+
+    @SuppressLint("NotifyDataSetChanged")
+    fun refresh() {
+        notifyDataSetChanged()
+    }
 }
