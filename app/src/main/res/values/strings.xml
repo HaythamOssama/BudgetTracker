@@ -29,4 +29,6 @@
     <string name="apply_filters">Apply Filters</string>
     <string name="ascendingly">Ascendingly</string>
     <string name="descendingly">Descendingly</string>
+    <string name="date_range">Date Range</string>
+    <string name="or_specify_dates_range">Or Specify Dates Range</string>
 </resources>

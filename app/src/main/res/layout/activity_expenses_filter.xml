@@ -75,6 +75,38 @@
 
     </com.google.android.material.chip.ChipGroup>
 
+    <com.google.android.material.textview.MaterialTextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/date_range"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="10dp"
+        android:id="@+id/datesRangeTextView"/>
+
+    <!-- Date Edit Text -->
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/dateRangeEditTextLayout"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        app:startIconDrawable="@drawable/calendar_icon"
+        android:singleLine="true"
+        app:endIconMode="clear_text"
+        android:layout_marginTop="10dp"
+        >
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/or_specify_dates_range"
+            android:id="@+id/dateRangeEditText"
+            android:maxLines="1"
+            android:inputType="text"
+            android:focusableInTouchMode="false">
+        </com.google.android.material.textfield.TextInputEditText>
+    </com.google.android.material.textfield.TextInputLayout>
+
+
     <com.google.android.material.button.MaterialButton
         android:id="@+id/applyFilterButton"
         android:layout_width="wrap_content"

@@ -1,22 +1,30 @@
 package com.example.budgettracker.ui.ui.expensesviewer
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import com.example.budgettracker.R
-import com.example.budgettracker.utils.Logger
+import com.example.budgettracker.utils.getGlobalSimpleDateFormat
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.chip.ChipGroup
+import com.google.android.material.datepicker.MaterialDatePicker
+import com.google.android.material.textfield.TextInputEditText
 import java.io.Serializable
+import java.util.Date
 
 class ExpensesFilter : AppCompatActivity() {
 
     private lateinit var applyFilterButton: MaterialButton
     private lateinit var sortByChipGroup: ChipGroup
     private lateinit var sortModeChipGroup: ChipGroup
+    private lateinit var dateRangeEditText: TextInputEditText
+    private var startDate = Date()
+    private var endDate = Date()
 
+    @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_expenses_filter)
@@ -24,21 +32,43 @@ class ExpensesFilter : AppCompatActivity() {
         applyFilterButton = findViewById(R.id.applyFilterButton)
         sortByChipGroup = findViewById(R.id.sortByChipGroup)
         sortModeChipGroup = findViewById(R.id.sortModeChipGroup)
+        dateRangeEditText = findViewById(R.id.dateRangeEditText)
 
         applyFilterButton.setOnClickListener {
             val intent = Intent(this, ExpensesViewerFragment::class.java)
 
             val selectedSortBy = parseSelectedSortChip(sortByChipGroup.checkedChipId)
             val selectedSortMode = parseSelectedSortModeChip(sortModeChipGroup.checkedChipId)
-            val filterOptions = FilterOptions(selectedSortBy, selectedSortMode)
+            val dateRange = Pair(startDate, endDate)
+            val filterOptions = FilterOptions(selectedSortBy, selectedSortMode, dateRange)
 
             intent.putExtra("FilterOptions", filterOptions)
             setResult(Activity.RESULT_OK, intent)
 
-            Logger.logDebug("Put: $filterOptions")
-
             finish()
-//            startActivity(intent)
+        }
+
+        dateRangeEditText.setOnClickListener {
+            val dateRangePicker =
+                MaterialDatePicker.Builder.dateRangePicker()
+                    .setTitleText("Select dates")
+                    .setSelection(
+                        androidx.core.util.Pair(
+                            MaterialDatePicker.thisMonthInUtcMilliseconds(),
+                            MaterialDatePicker.todayInUtcMilliseconds()
+                        )
+                    )
+                    .build()
+
+            dateRangePicker.show(supportFragmentManager, "Filter Date Range")
+
+            dateRangePicker.addOnPositiveButtonClickListener {
+                startDate = Date(it.first)
+                endDate = Date(it.second)
+                val beginDate = getGlobalSimpleDateFormat().format(Date(it.first))
+                val endDate = getGlobalSimpleDateFormat().format(Date(it.second))
+                dateRangeEditText.setText("$beginDate -> $endDate")
+            }
         }
     }
 
@@ -82,11 +112,13 @@ class ExpensesFilter : AppCompatActivity() {
 
 data class FilterOptions(
     val sortBy: FilterOptionsSortBy,
-    val sortMode: FilterOptionsSortMode
+    val sortMode: FilterOptionsSortMode,
+    val dateRange: Pair<Date, Date>
 ) : Serializable
 {
     override fun toString(): String{
-        return "Sort By: ${sortBy.name} - Sort Mode: ${sortMode.name}"
+        return "Sort By: ${sortBy.name} - Sort Mode: ${sortMode.name} - " +
+                "Date Range: ${getGlobalSimpleDateFormat().format(dateRange.first)} -> ${getGlobalSimpleDateFormat().format(dateRange.second)}"
     }
 }
 
