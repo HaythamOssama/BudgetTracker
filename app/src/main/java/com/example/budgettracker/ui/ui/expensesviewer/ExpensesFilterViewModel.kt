@@ -2,18 +2,20 @@ package com.example.budgettracker.ui.ui.expensesviewer
 
 import androidx.lifecycle.ViewModel
 import com.example.budgettracker.database.expenses.Expense
+import com.example.budgettracker.utils.Logger
 import com.example.budgettracker.utils.getGlobalSimpleDateFormat
 import java.text.SimpleDateFormat
-import java.util.Date
 import java.util.Locale
 
 class ExpensesFilterViewModel: ViewModel() {
     suspend fun handleFiltering(expensesViewerViewModel: ExpensesViewerViewModel,
                                 filterOptions: FilterOptions): List<Expense>
     {
+        Logger.logDebug(">>>> $filterOptions")
+
         var currentExpenses = expensesViewerViewModel.parseExpenses(expensesViewerViewModel.allExpenses.value!!)
 
-        if (filterOptions.dateRange.first != Date() && filterOptions.dateRange.second != Date()) {
+        if (filterOptions.isDataRangePresent) {
             currentExpenses = currentExpenses.filter { getGlobalSimpleDateFormat().parse(it.date)!! in filterOptions.dateRange.first..filterOptions.dateRange.second }
         }
 

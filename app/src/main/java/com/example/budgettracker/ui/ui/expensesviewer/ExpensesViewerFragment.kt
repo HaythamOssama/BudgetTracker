@@ -25,7 +25,6 @@ import com.example.budgettracker.ui.expensesform.ExpensesForm
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.coroutines.launch
 
-@Suppress("DEPRECATION")
 class ExpensesViewerFragment : Fragment() {
 
     private var _binding: FragmentExpensesViewerBinding? = null
@@ -61,24 +60,18 @@ class ExpensesViewerFragment : Fragment() {
         binding.list.scrollListener = onListScrollListener
 
         binding.searchView.registerFilterAction {
-            val intent = Intent(requireActivity(), ExpensesFilter::class.java)
-            startForResult.launch(intent)
-        }
-        return binding.root
-    }
-
-    // Create an ActivityResultLauncher
-    private val startForResult =
-        this.registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-            if (result.resultCode == Activity.RESULT_OK) {
-                val data = result.data
-                val filterOptions = data!!.getSerializableExtra("FilterOptions") as FilterOptions
+            val modalBottomSheet = ExpensesFilter {filterOptions ->
                 lifecycleScope.launch {
                     val sortedList = filterViewModel.handleFiltering(mainViewModel, filterOptions)
                     reloadRecyclerView(sortedList)
                 }
             }
+
+            modalBottomSheet.show(requireParentFragment().parentFragmentManager, ExpensesFilter.TAG)
+
         }
+        return binding.root
+    }
 
     private fun observeSearchEditText() {
         binding.searchView.searchEditText.addTextChangedListener(object : TextWatcher {

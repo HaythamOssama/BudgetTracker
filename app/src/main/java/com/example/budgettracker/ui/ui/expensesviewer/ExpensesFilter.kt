@@ -1,13 +1,13 @@
 package com.example.budgettracker.ui.ui.expensesviewer
 
 import android.annotation.SuppressLint
-import android.app.Activity
-import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import com.example.budgettracker.R
 import com.example.budgettracker.utils.getGlobalSimpleDateFormat
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.chip.ChipGroup
 import com.google.android.material.datepicker.MaterialDatePicker
@@ -15,7 +15,7 @@ import com.google.android.material.textfield.TextInputEditText
 import java.io.Serializable
 import java.util.Date
 
-class ExpensesFilter : AppCompatActivity() {
+class ExpensesFilter(private val onApplyAction: (FilterOptions) -> Unit) : BottomSheetDialogFragment() {
 
     private lateinit var applyFilterButton: MaterialButton
     private lateinit var sortByChipGroup: ChipGroup
@@ -23,31 +23,37 @@ class ExpensesFilter : AppCompatActivity() {
     private lateinit var dateRangeEditText: TextInputEditText
     private var startDate = Date()
     private var endDate = Date()
+    private var isDataRangePresent = false
+    private lateinit var binding: View
+
+    companion object {
+        const val TAG = "ModalBottomSheet"
+    }
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View
+    {
+        binding = inflater.inflate(R.layout.activity_expenses_filter, container, false)
+
+        populateViewReferences()
+        populateDataRangePicker()
+        populateApplyFilterAction()
+
+        return binding
+    }
+
+    private fun populateViewReferences() {
+        applyFilterButton = binding.findViewById(R.id.applyFilterButton)
+        sortByChipGroup = binding.findViewById(R.id.sortByChipGroup)
+        sortModeChipGroup = binding.findViewById(R.id.sortModeChipGroup)
+        dateRangeEditText = binding.findViewById(R.id.dateRangeEditText)
+    }
 
     @SuppressLint("SetTextI18n")
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_expenses_filter)
-
-        applyFilterButton = findViewById(R.id.applyFilterButton)
-        sortByChipGroup = findViewById(R.id.sortByChipGroup)
-        sortModeChipGroup = findViewById(R.id.sortModeChipGroup)
-        dateRangeEditText = findViewById(R.id.dateRangeEditText)
-
-        applyFilterButton.setOnClickListener {
-            val intent = Intent(this, ExpensesViewerFragment::class.java)
-
-            val selectedSortBy = parseSelectedSortChip(sortByChipGroup.checkedChipId)
-            val selectedSortMode = parseSelectedSortModeChip(sortModeChipGroup.checkedChipId)
-            val dateRange = Pair(startDate, endDate)
-            val filterOptions = FilterOptions(selectedSortBy, selectedSortMode, dateRange)
-
-            intent.putExtra("FilterOptions", filterOptions)
-            setResult(Activity.RESULT_OK, intent)
-
-            finish()
-        }
-
+    private fun populateDataRangePicker() {
         dateRangeEditText.setOnClickListener {
             val dateRangePicker =
                 MaterialDatePicker.Builder.dateRangePicker()
@@ -60,15 +66,27 @@ class ExpensesFilter : AppCompatActivity() {
                     )
                     .build()
 
-            dateRangePicker.show(supportFragmentManager, "Filter Date Range")
+            dateRangePicker.show(parentFragmentManager, "Filter Date Range")
 
             dateRangePicker.addOnPositiveButtonClickListener {
+                isDataRangePresent = true
                 startDate = Date(it.first)
                 endDate = Date(it.second)
                 val beginDate = getGlobalSimpleDateFormat().format(Date(it.first))
                 val endDate = getGlobalSimpleDateFormat().format(Date(it.second))
                 dateRangeEditText.setText("$beginDate -> $endDate")
             }
+        }
+    }
+
+    private fun populateApplyFilterAction() {
+        applyFilterButton.setOnClickListener {
+            val selectedSortBy = parseSelectedSortChip(sortByChipGroup.checkedChipId)
+            val selectedSortMode = parseSelectedSortModeChip(sortModeChipGroup.checkedChipId)
+            val dateRange = Pair(startDate, endDate)
+            val filterOptions = FilterOptions(selectedSortBy, selectedSortMode, isDataRangePresent, dateRange)
+            onApplyAction(filterOptions)
+            dismiss()
         }
     }
 
@@ -108,16 +126,21 @@ class ExpensesFilter : AppCompatActivity() {
         return sortByMode
     }
 
+    override fun getTheme(): Int {
+        return R.style.AppBottomSheetDialogTheme
+    }
 }
 
 data class FilterOptions(
     val sortBy: FilterOptionsSortBy,
     val sortMode: FilterOptionsSortMode,
+    val isDataRangePresent: Boolean,
     val dateRange: Pair<Date, Date>
 ) : Serializable
 {
     override fun toString(): String{
         return "Sort By: ${sortBy.name} - Sort Mode: ${sortMode.name} - " +
+                "Is Data Range Present? ${isDataRangePresent} " +
                 "Date Range: ${getGlobalSimpleDateFormat().format(dateRange.first)} -> ${getGlobalSimpleDateFormat().format(dateRange.second)}"
     }
 }
