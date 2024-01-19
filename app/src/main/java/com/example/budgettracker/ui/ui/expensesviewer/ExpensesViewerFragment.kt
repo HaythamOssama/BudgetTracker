@@ -168,6 +168,11 @@ class ExpensesViewerFragment : Fragment() {
     override fun onResume() {
         // Reload the items whenever this activity is resumed
         refreshRecyclerView()
+        if (mainViewModel.allExpenses.value != null && mainViewModel.allExpenses.value!!.isNotEmpty()) {
+            lifecycleScope.launch {
+                reloadRecyclerView(mainViewModel.parseExpenses(mainViewModel.allExpenses.value!!))
+            }
+        }
         super.onResume()
     }
 
