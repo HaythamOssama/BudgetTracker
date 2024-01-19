@@ -14,6 +14,7 @@ class ExpensesViewerAdapter(dataSet: List<Expense> = emptyList()) : DragDropSwip
         val subcategoryTextView: TextView = itemView.findViewById(R.id.subcategoryTextView)
         val costTextView: TextView = itemView.findViewById(R.id.costTextView)
         val countTextView: TextView = itemView.findViewById(R.id.countTextView)
+        val dateTextView: TextView = itemView.findViewById(R.id.dateTextView)
     }
 
     override fun getViewHolder(itemView: View) = ViewHolder(itemView)
@@ -24,6 +25,7 @@ class ExpensesViewerAdapter(dataSet: List<Expense> = emptyList()) : DragDropSwip
         viewHolder.subcategoryTextView.text = item.subcategory!!.name
         viewHolder.costTextView.text = item.cost.toString()
         viewHolder.countTextView.text = item.count.toString()
+        viewHolder.dateTextView.text = item.date
     }
 
     override fun getViewToTouchToStartDraggingItem(item: Expense, viewHolder: ViewHolder, position: Int): View? {
@@ -34,6 +36,11 @@ class ExpensesViewerAdapter(dataSet: List<Expense> = emptyList()) : DragDropSwip
     @SuppressLint("NotifyDataSetChanged")
     fun updateDataSet(newList: List<Expense>) {
         super.dataSet = newList
+        notifyDataSetChanged()
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    fun refresh() {
         notifyDataSetChanged()
     }
 }

@@ -29,4 +29,12 @@ data class Expense(
         return String.format("Expense: [%s] [count: %s] [cost: %s] [date: %s] [%s]",
             id, count, cost, date, subcategory.toString())
     }
+
+    fun isStringPresent(item: String): Boolean {
+        return (cost.toString().contains(item) ||
+                count.toString().contains(item) ||
+                date.contains(item) ||
+                subcategory!!.name.contains(item)||
+                subcategory!!.category!!.name.contains(item))
+    }
 }
