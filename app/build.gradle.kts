@@ -90,4 +90,6 @@ dependencies {
 
     implementation("com.github.razir.progressbutton:progressbutton:2.1.0")
     implementation("com.ernestoyaquello.dragdropswiperecyclerview:drag-drop-swipe-recyclerview:1.2.0")
+    implementation("com.github.duanhong169:drawabletoolbox:1.0.7")
+
 }

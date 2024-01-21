@@ -6,18 +6,17 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewAnimationUtils
 import android.widget.EditText
-import android.widget.FrameLayout
 import android.widget.RelativeLayout
+import androidx.appcompat.widget.Toolbar
 import com.example.budgettracker.R
 
 
-class SearchView(context: Context, attrs: AttributeSet) : FrameLayout(context, attrs)
+class SearchView(context: Context, attrs: AttributeSet) : Toolbar(context, attrs)
 {
     var searchEditText: EditText
     private var openSearchButton: View
     private var closeSearchButton: View
     private var searchOpenView: RelativeLayout
-    private var filterButton: View
 
     init {
         LayoutInflater.from(context).inflate(R.layout.view_search, this, true)
@@ -25,16 +24,9 @@ class SearchView(context: Context, attrs: AttributeSet) : FrameLayout(context, a
         openSearchButton = findViewById(R.id.open_search_button)
         closeSearchButton = findViewById(R.id.close_search_button)
         searchOpenView = findViewById(R.id.search_open_view)
-        filterButton = findViewById(R.id.filter_button)
 
         openSearchButton.setOnClickListener { openSearch() }
         closeSearchButton.setOnClickListener { closeSearch() }
-    }
-
-    fun registerFilterAction(onFilterClicked: () -> Unit) {
-        filterButton.setOnClickListener {
-            onFilterClicked()
-        }
     }
 
     private fun openSearch() {
@@ -49,7 +41,6 @@ class SearchView(context: Context, attrs: AttributeSet) : FrameLayout(context, a
         circularReveal.duration = 300
         circularReveal.start()
         openSearchButton.visibility = View.INVISIBLE
-        filterButton.visibility = View.INVISIBLE
     }
 
     private fun closeSearch() {
@@ -71,7 +62,6 @@ class SearchView(context: Context, attrs: AttributeSet) : FrameLayout(context, a
                 searchEditText.setText("")
                 circularConceal.removeAllListeners()
                 openSearchButton.visibility = View.VISIBLE
-                filterButton.visibility = View.VISIBLE
             }
         })
 

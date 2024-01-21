@@ -20,8 +20,10 @@ import com.example.budgettracker.database.expenses.Expense
 import com.example.budgettracker.databinding.FragmentExpensesViewerBinding
 import com.example.budgettracker.ui.MainActivity
 import com.example.budgettracker.ui.expensesform.ExpensesForm
+import com.example.budgettracker.utils.dpToPx
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.coroutines.launch
+import top.defaults.drawabletoolbox.DrawableBuilder
 
 class ExpensesViewerFragment : Fragment() {
 
@@ -39,6 +41,15 @@ class ExpensesViewerFragment : Fragment() {
 
         _binding = FragmentExpensesViewerBinding.inflate(inflater, container, false)
         styleRecyclerView()
+        binding.container.setOverlayDrawable(DrawableBuilder().rectangle().apply {
+            cornerRadii(
+                dpToPx(16, requireContext()),
+                dpToPx(16, requireContext()),
+                0,
+                0
+            )
+            solidColor(android.graphics.Color.BLACK)
+        })
 
         observeSearchEditText()
 
@@ -57,17 +68,6 @@ class ExpensesViewerFragment : Fragment() {
 
         binding.list.scrollListener = onListScrollListener
 
-        binding.searchView.registerFilterAction {
-            val modalBottomSheet = ExpensesFilter {filterOptions ->
-                lifecycleScope.launch {
-                    val sortedList = filterViewModel.handleFiltering(mainViewModel, filterOptions)
-                    reloadRecyclerView(sortedList)
-                }
-            }
-
-            modalBottomSheet.show(requireParentFragment().parentFragmentManager, ExpensesFilter.TAG)
-
-        }
         return binding.root
     }
 

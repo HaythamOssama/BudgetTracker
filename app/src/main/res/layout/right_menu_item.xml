@@ -5,8 +5,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:padding="10dp"
     android:layout_margin="4dp"
-    app:cardCornerRadius="5dp"
-    app:cardElevation="20dp"
+    style="@style/ExpenseCardView"
     app:cardBackgroundColor="@color/edit">
 
     <LinearLayout
