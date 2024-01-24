@@ -3,11 +3,12 @@ package com.example.budgettracker.ui.ui.expensesviewer
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.GONE
+import android.view.View.VISIBLE
 import android.view.ViewGroup
+import android.widget.SearchView.OnQueryTextListener
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -49,7 +50,7 @@ class ExpensesViewerFragment : Fragment() {
             }
         }
 
-        binding.fabInsertExpense.setOnClickListener {
+        binding.insertButton.setOnClickListener {
             val intent = Intent(requireContext(), ExpensesForm::class.java)
             intent.putExtra("Action", "Insert")
             startActivity(intent)
@@ -57,46 +58,45 @@ class ExpensesViewerFragment : Fragment() {
 
         binding.list.scrollListener = onListScrollListener
 
-//        binding.searchView.registerFilterAction {
-//            val modalBottomSheet = ExpensesFilter {filterOptions ->
-//                lifecycleScope.launch {
-//                    val sortedList = filterViewModel.handleFiltering(mainViewModel, filterOptions)
-//                    reloadRecyclerView(sortedList)
-//                }
-//            }
-//
-//            modalBottomSheet.show(requireParentFragment().parentFragmentManager, ExpensesFilter.TAG)
-//
-//        }
+        binding.filterButton.setOnClickListener {
+            val modalBottomSheet = ExpensesFilter {filterOptions ->
+                lifecycleScope.launch {
+                    val sortedList = filterViewModel.handleFiltering(mainViewModel, filterOptions)
+                    reloadRecyclerView(sortedList)
+                }
+            }
+            modalBottomSheet.show(requireParentFragment().parentFragmentManager, ExpensesFilter.TAG)
+
+        }
         return binding.root
     }
 
     private fun observeSearchEditText() {
-//        binding.searchView.searchEditText.addTextChangedListener(object : TextWatcher {
-//            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-//            }
-//
-//            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-//                lifecycleScope.launch {
-//                    if(s.toString().isNotEmpty()) {
-//                        val currentExpenses = mainViewModel.allExpenses.value!!
-//                        val matchesList = mutableListOf<Expense>()
-//                        for (expense in mainViewModel.parseExpenses(currentExpenses)) {
-//                            if(expense.isStringPresent(s.toString())) {
-//                                matchesList.add(expense)
-//                            }
-//                        }
-//                        reloadRecyclerView(matchesList)
-//                    }
-//                    else {
-//                        reloadRecyclerView(mainViewModel.parseExpenses(mainViewModel.allExpenses.value!!))
-//                    }
-//                }
-//            }
-//
-//            override fun afterTextChanged(s: Editable?) {
-//            }
-//        })
+        binding.searchButton.setOnQueryTextListener(object: OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                return true
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                lifecycleScope.launch {
+                    if(newText!!.isNotEmpty()) {
+                        val currentExpenses = mainViewModel.allExpenses.value!!
+                        val matchesList = mutableListOf<Expense>()
+                        for (expense in mainViewModel.parseExpenses(currentExpenses)) {
+                            if(expense.isStringPresent(newText)) {
+                                matchesList.add(expense)
+                            }
+                        }
+                        reloadRecyclerView(matchesList)
+                    }
+                    else {
+                        reloadRecyclerView(mainViewModel.parseExpenses(mainViewModel.allExpenses.value!!))
+                    }
+                }
+                return true
+            }
+
+        })
     }
 
     private val onListScrollListener = object : OnListScrollListener {
@@ -108,13 +108,13 @@ class ExpensesViewerFragment : Fragment() {
                 (requireActivity() as MainActivity).isBottomNavBarVisible())
             {
                 (requireActivity() as MainActivity).hideBottomNavBar()
-                binding.fabInsertExpense.hide()
+                binding.toolbar.visibility = GONE
             }
             else if (scrollDirection == OnListScrollListener.ScrollDirection.UP &&
                 !(requireActivity() as MainActivity).isBottomNavBarVisible())
             {
                 (requireActivity() as MainActivity).showBottomNavBar()
-                binding.fabInsertExpense.show()
+                binding.toolbar.visibility = VISIBLE
             }
         }
     }

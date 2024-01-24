@@ -6,14 +6,17 @@
     android:layout_height="match_parent"
     tools:context=".ui.ui.expensesviewer.ExpensesViewerFragment"
     android:orientation="vertical"
+    android:animateLayoutChanges="true"
     >
 
     <com.google.android.material.card.MaterialCardView
+        android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_margin="10dp"
         app:cardBackgroundColor="@color/teal_700"
-        app:cardCornerRadius="5dp">
+        app:cardCornerRadius="5dp"
+        android:animateLayoutChanges="true" >
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -21,6 +24,7 @@
             android:orientation="horizontal">
 
             <SearchView
+                android:id="@+id/searchButton"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
@@ -52,30 +56,12 @@
     </com.google.android.material.card.MaterialCardView>
 
 
-    <FrameLayout
+    <com.ernestoyaquello.dragdropswiperecyclerview.DragDropSwipeRecyclerView
+        android:id="@+id/list"
+        android:layout_marginStart="5dp"
+        android:layout_marginEnd="5dp"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:padding="5dp"
-        >
-        <com.ernestoyaquello.dragdropswiperecyclerview.DragDropSwipeRecyclerView
-            android:id="@+id/list"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+        android:layout_height="match_parent"/>
 
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/fabInsertExpense"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:clickable="true"
-            android:contentDescription="@string/insert_expense"
-            android:src="@drawable/insert_expense_icon"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:focusable="true"
-            android:layout_marginBottom="60dp"
-            android:layout_marginEnd="16dp"
-            android:layout_gravity="end|bottom"
-            />
-    </FrameLayout>
 
 </LinearLayout>
