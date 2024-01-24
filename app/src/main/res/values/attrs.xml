@@ -2,7 +2,7 @@
 <resources>
     <declare-styleable name="BackdropLayout">
         <attr name="front_layout" format="reference"/>
-        <attr name="back_layout" format="reference"/>
+        <attr name="back_layout_container" format="reference"/>
         <attr name="toolbarId" format="reference"/>
         <attr name="peekHeight" format="dimension"/>
         <attr name="menuDrawable" format="reference"/>
@@ -10,5 +10,9 @@
         <attr name="animationDuration" format="integer"/>
         <attr name="disable_when_open" format="boolean"/>
         <attr name="front_header_radius" format="dimension"/>
+    </declare-styleable>
+
+    <declare-styleable name="BackdropLayoutToolbarViewLayoutBind">
+        <attr name="bound_layout" format="reference"/>
     </declare-styleable>
 </resources>

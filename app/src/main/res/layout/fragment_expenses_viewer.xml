@@ -8,14 +8,10 @@
     android:orientation="vertical"
     android:background="#3C3C3C">
 
-    <include
-        android:id="@+id/toolbar"
-        layout="@layout/view_search" />
-
-    <com.roacult.backdrop.BackdropLayout
+    <com.example.budgettracker.utils.BackdropLayout
         android:id="@+id/container"
         app:front_layout="@id/includedFront"
-        app:back_layout="@id/includedBack"
+        app:back_layout_container="@id/backLayoutContainer"
         app:toolbarId="@id/toolbar"
         app:peekHeight="56dp"
         app:disable_when_open="true"
@@ -27,53 +23,78 @@
         android:background="#3C3C3C"
         >
 
-        <include
-            android:id="@+id/includedBack"
-            layout="@layout/activity_expenses_filter"
-            />
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@drawable/shapes"
-            android:id="@+id/container2">
+            android:orientation="vertical">
+
+            <include
+                android:id="@+id/toolbar"
+                layout="@layout/view_search" />
 
             <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:id="@+id/includedFront"
-                android:background="@drawable/shapes"
-                android:backgroundTint="@color/black"
-                >
-                <com.ernestoyaquello.dragdropswiperecyclerview.DragDropSwipeRecyclerView
-                    android:id="@+id/list"
+                android:layout_height="match_parent">
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/backLayoutContainer">
+
+                    <androidx.fragment.app.FragmentContainerView
+                        android:id="@+id/fragmentContainer"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        app:defaultNavHost="true"
+                        app:navGraph="@navigation/mobile_navigation">
+
+                    </androidx.fragment.app.FragmentContainerView>
+
+<!--                    <include-->
+<!--                        layout="@layout/activity_expenses_filter"/>-->
+<!--                    <include-->
+<!--                        layout="@layout/activity_expenses_form"/>-->
+                </FrameLayout>
+
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:paddingTop="15dp"/>
+                    android:background="@drawable/shapes"
+                    android:id="@+id/includedFront">
 
-                <com.google.android.material.floatingactionbutton.FloatingActionButton
-                    android:id="@+id/fabInsertExpense"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:clickable="true"
-                    android:contentDescription="@string/insert_expense"
-                    android:src="@drawable/insert_expense_icon"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    android:focusable="true"
-                    android:layout_marginBottom="60dp"
-                    android:layout_marginEnd="16dp"
-                    android:layout_gravity="end|bottom"
-                    />
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/shapes"
+                        android:backgroundTint="@color/black"
+                        >
+                        <com.ernestoyaquello.dragdropswiperecyclerview.DragDropSwipeRecyclerView
+                            android:id="@+id/list"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:paddingTop="15dp"/>
+
+                        <com.google.android.material.floatingactionbutton.FloatingActionButton
+                            android:id="@+id/fabInsertExpense"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:clickable="true"
+                            android:contentDescription="@string/insert_expense"
+                            android:src="@drawable/insert_expense_icon"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            android:focusable="true"
+                            android:layout_marginBottom="60dp"
+                            android:layout_marginEnd="16dp"
+                            android:layout_gravity="end|bottom"
+                            />
+                    </FrameLayout>
+                </LinearLayout>
             </FrameLayout>
+
         </LinearLayout>
 
-    </com.roacult.backdrop.BackdropLayout>
-
-    <com.example.budgettracker.ui.ui.expensesviewer.SearchView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/searchView"/>
+    </com.example.budgettracker.utils.BackdropLayout>
 
 
 </LinearLayout>

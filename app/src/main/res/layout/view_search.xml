@@ -1,79 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.google.android.material.appbar.MaterialToolbar xmlns:android="http://schemas.android.com/apk/res/android"
+<com.example.budgettracker.ui.ui.expensesviewer.BackdropToolbar xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="?actionBarSize"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="#3C3C3C"
     android:layout_marginBottom="5dp">
-
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-
-        <RelativeLayout
-            android:id="@+id/search_closed_view"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="center">
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
-                android:layout_centerVertical="true"
                 >
 
-                <View
-                    android:id="@+id/open_search_button"
+                <com.example.budgettracker.ui.ui.expensesviewer.BackdropLayoutToolbarViewLayoutBind
+                    android:id="@+id/viewFilter"
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:layout_marginEnd="16dp"
                     android:background="@drawable/search_icon_raw"
-                    android:backgroundTint="@color/white" />
+                    android:backgroundTint="@color/white"
+                    app:bound_layout="@layout/activity_expenses_filter"
+                    />
+
+                <com.example.budgettracker.ui.ui.expensesviewer.BackdropLayoutToolbarViewLayoutBind
+                    android:id="@+id/viewInsertExpense"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_marginEnd="16dp"
+                    android:background="@drawable/insert_expense_icon"
+                    android:backgroundTint="@color/white"
+                    app:bound_layout="@layout/activity_expenses_form"
+                    android:layout_gravity="end"/>
 
             </LinearLayout>
 
-
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:id="@+id/search_open_view"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="center"
-            android:layout_margin="4dp"
-            android:visibility="invisible">
-
-            <View
-                android:id="@+id/close_search_button"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:layout_alignParentStart="true"
-                android:layout_centerVertical="true"
-                android:layout_marginStart="16dp"
-                android:background="@drawable/back_icon_raw"
-                android:backgroundTint="@color/white" />
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/search_input_text"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginStart="16dp"
-                android:layout_marginEnd="16dp"
-                android:layout_toStartOf="@id/execute_search_button"
-                android:layout_toEndOf="@id/close_search_button" />
-
-            <View
-                android:id="@+id/execute_search_button"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:layout_alignParentEnd="true"
-                android:layout_centerVertical="true"
-                android:layout_marginEnd="16dp"
-                android:background="@drawable/search_icon_raw"
-                android:backgroundTint="@color/white"/>
-
-        </RelativeLayout>
-    </FrameLayout>
-
-</com.google.android.material.appbar.MaterialToolbar>
+</com.example.budgettracker.ui.ui.expensesviewer.BackdropToolbar>
