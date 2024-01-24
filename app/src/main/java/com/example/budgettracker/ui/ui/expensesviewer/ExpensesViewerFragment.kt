@@ -57,46 +57,46 @@ class ExpensesViewerFragment : Fragment() {
 
         binding.list.scrollListener = onListScrollListener
 
-        binding.searchView.registerFilterAction {
-            val modalBottomSheet = ExpensesFilter {filterOptions ->
-                lifecycleScope.launch {
-                    val sortedList = filterViewModel.handleFiltering(mainViewModel, filterOptions)
-                    reloadRecyclerView(sortedList)
-                }
-            }
-
-            modalBottomSheet.show(requireParentFragment().parentFragmentManager, ExpensesFilter.TAG)
-
-        }
+//        binding.searchView.registerFilterAction {
+//            val modalBottomSheet = ExpensesFilter {filterOptions ->
+//                lifecycleScope.launch {
+//                    val sortedList = filterViewModel.handleFiltering(mainViewModel, filterOptions)
+//                    reloadRecyclerView(sortedList)
+//                }
+//            }
+//
+//            modalBottomSheet.show(requireParentFragment().parentFragmentManager, ExpensesFilter.TAG)
+//
+//        }
         return binding.root
     }
 
     private fun observeSearchEditText() {
-        binding.searchView.searchEditText.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-            }
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                lifecycleScope.launch {
-                    if(s.toString().isNotEmpty()) {
-                        val currentExpenses = mainViewModel.allExpenses.value!!
-                        val matchesList = mutableListOf<Expense>()
-                        for (expense in mainViewModel.parseExpenses(currentExpenses)) {
-                            if(expense.isStringPresent(s.toString())) {
-                                matchesList.add(expense)
-                            }
-                        }
-                        reloadRecyclerView(matchesList)
-                    }
-                    else {
-                        reloadRecyclerView(mainViewModel.parseExpenses(mainViewModel.allExpenses.value!!))
-                    }
-                }
-            }
-
-            override fun afterTextChanged(s: Editable?) {
-            }
-        })
+//        binding.searchView.searchEditText.addTextChangedListener(object : TextWatcher {
+//            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+//            }
+//
+//            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+//                lifecycleScope.launch {
+//                    if(s.toString().isNotEmpty()) {
+//                        val currentExpenses = mainViewModel.allExpenses.value!!
+//                        val matchesList = mutableListOf<Expense>()
+//                        for (expense in mainViewModel.parseExpenses(currentExpenses)) {
+//                            if(expense.isStringPresent(s.toString())) {
+//                                matchesList.add(expense)
+//                            }
+//                        }
+//                        reloadRecyclerView(matchesList)
+//                    }
+//                    else {
+//                        reloadRecyclerView(mainViewModel.parseExpenses(mainViewModel.allExpenses.value!!))
+//                    }
+//                }
+//            }
+//
+//            override fun afterTextChanged(s: Editable?) {
+//            }
+//        })
     }
 
     private val onListScrollListener = object : OnListScrollListener {

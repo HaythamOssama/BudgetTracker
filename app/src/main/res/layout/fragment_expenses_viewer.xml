@@ -8,10 +8,49 @@
     android:orientation="vertical"
     >
 
-    <com.example.budgettracker.ui.ui.expensesviewer.SearchView
+    <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/searchView"/>
+        android:layout_height="50dp"
+        android:layout_margin="10dp"
+        app:cardBackgroundColor="@color/teal_700"
+        app:cardCornerRadius="5dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:orientation="horizontal">
+
+            <SearchView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1"
+                android:iconifiedByDefault="false"
+                android:queryBackground="@android:color/transparent"
+                android:queryHint="Search for expense" />
+
+            <ImageView
+                android:id="@+id/filterButton"
+                android:layout_width="21dp"
+                android:layout_height="21dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginEnd="20dp"
+                android:src="@drawable/filled_filter_32"
+                android:contentDescription="@string/filter_expenses" />
+
+            <ImageView
+                android:id="@+id/insertButton"
+                android:layout_width="21dp"
+                android:layout_height="21dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginEnd="20dp"
+                android:src="@drawable/plus_6_32"
+                android:contentDescription="@string/insert_expense" />
+
+        </LinearLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+
 
     <FrameLayout
         android:layout_width="match_parent"
