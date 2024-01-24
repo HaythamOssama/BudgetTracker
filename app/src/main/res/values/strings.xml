@@ -31,5 +31,9 @@
     <string name="descendingly">Descendingly</string>
     <string name="date_range">Date Range</string>
     <string name="or_specify_dates_range">Or Specify Dates Range</string>
+    <string name="day">Day</string>
+    <string name="month">MON</string>
+    <string name="year">Year</string>
+    <string name="category_image">Category Image</string>
     <string name="search_for_expense">Search for Expense</string>
 </resources>
