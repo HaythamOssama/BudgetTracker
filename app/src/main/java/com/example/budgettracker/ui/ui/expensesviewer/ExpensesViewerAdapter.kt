@@ -7,6 +7,7 @@ import android.widget.TextView
 import com.ernestoyaquello.dragdropswiperecyclerview.DragDropSwipeAdapter
 import com.example.budgettracker.R
 import com.example.budgettracker.database.expenses.Expense
+import com.example.budgettracker.database.expenses.PayType
 
 class ExpensesViewerAdapter(dataSet: List<Expense> = emptyList()) : DragDropSwipeAdapter<Expense, ExpensesViewerAdapter.ViewHolder>(dataSet) {
 
@@ -19,6 +20,7 @@ class ExpensesViewerAdapter(dataSet: List<Expense> = emptyList()) : DragDropSwip
         val monthTextView: TextView = itemView.findViewById(R.id.monthTextView)
         val yearTextView: TextView = itemView.findViewById(R.id.yearTextView)
         val categoryImage: ImageView = itemView.findViewById(R.id.categoryImage)
+        val payTypeTextView: TextView = itemView.findViewById(R.id.payTypeTextView)
     }
 
     override fun getViewHolder(itemView: View) = ViewHolder(itemView)
@@ -34,6 +36,7 @@ class ExpensesViewerAdapter(dataSet: List<Expense> = emptyList()) : DragDropSwip
         viewHolder.monthTextView.text = item.date.split(" ")[1].substring(0, 3).uppercase()
         viewHolder.yearTextView.text = item.date.split(" ")[2]
         viewHolder.categoryImage.setBackgroundResource(R.drawable.grocery)
+        viewHolder.payTypeTextView.text = PayType.parse(item.payType)
     }
 
     private fun formatDecimal(number: Double): String {

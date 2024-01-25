@@ -5,6 +5,7 @@ import androidx.lifecycle.AndroidViewModel
 import com.example.budgettracker.database.DatabaseRepo
 import com.example.budgettracker.database.categories.Category
 import com.example.budgettracker.database.expenses.Expense
+import com.example.budgettracker.database.expenses.PayType
 import com.example.budgettracker.database.subcategory.Subcategory
 import java.text.SimpleDateFormat
 import java.util.Locale
@@ -19,7 +20,7 @@ class ExpenseFormViewModel(app: Application): AndroidViewModel(app) {
     }
 
     suspend fun submitExpense(inputCategory: String, inputSubcategory: String, inputCost: String,
-                      inputCount: String, inputDate: String): Boolean
+                      inputCount: String, inputDate: String, inputPayType: PayType): Boolean
     {
         val subcategory = repo.getSubcategoryByName(inputSubcategory)
         // If subcategory exists, the expense can be inserted directly.
@@ -42,7 +43,7 @@ class ExpenseFormViewModel(app: Application): AndroidViewModel(app) {
         }
 
         val expense = Expense(subcategoryId = subcategoryId.toLong(), cost = inputCost.toDouble(),
-            count = inputCount.toDouble(), date = inputDate)
+            count = inputCount.toDouble(), date = inputDate, payType = inputPayType)
 
         return repo.insertExpense(expense)
     }
@@ -52,8 +53,10 @@ class ExpenseFormViewModel(app: Application): AndroidViewModel(app) {
     }
 
     suspend fun editExpense(expense: Expense, inputCategory: String, inputSubcategory: String,
-                            inputCost: String, inputCount: String, inputDate: String): Boolean
+                            inputCost: String, inputCount: String, inputDate: String,
+                            inputPayType: PayType): Boolean
     {
-        return repo.updateExpense(expense,inputCategory, inputSubcategory, inputCost, inputCount, inputDate)
+        return repo.updateExpense(expense,inputCategory, inputSubcategory, inputCost,
+            inputCount, inputDate, inputPayType)
     }
 }

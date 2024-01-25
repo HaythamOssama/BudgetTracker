@@ -40,4 +40,8 @@
     <string name="a_z">A-Z</string>
     <string name="z_a">Z-A</string>
     <string name="sort_by_category">Sort by Category</string>
+    <string name="cash">Cash</string>
+    <string name="debit">Debit</string>
+    <string name="credit">Credit</string>
+    <string name="pay_type">Pay Type</string>
 </resources>

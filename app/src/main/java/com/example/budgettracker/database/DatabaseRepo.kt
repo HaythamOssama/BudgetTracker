@@ -6,6 +6,7 @@ import com.example.budgettracker.database.categories.Category
 import com.example.budgettracker.database.databasewrappers.AppDatabase
 import com.example.budgettracker.database.databasewrappers.TestingAppDatabase
 import com.example.budgettracker.database.expenses.Expense
+import com.example.budgettracker.database.expenses.PayType
 import com.example.budgettracker.database.subcategory.Subcategory
 
 class DatabaseRepo(context: Context, initializedDatabase: TestingAppDatabase? = null) {
@@ -114,7 +115,8 @@ class DatabaseRepo(context: Context, initializedDatabase: TestingAppDatabase? = 
 
     @WorkerThread
     suspend fun updateExpense(expense: Expense, inputCategory: String, inputSubcategory: String,
-                              inputCost: String, inputCount: String, inputDate: String): Boolean
+                              inputCost: String, inputCount: String, inputDate: String,
+                              payType: PayType): Boolean
     {
         val isCategorySame = expense.subcategory!!.category!!.name == inputCategory
         val isSubcategorySame = expense.subcategory!!.name == inputSubcategory
@@ -124,6 +126,7 @@ class DatabaseRepo(context: Context, initializedDatabase: TestingAppDatabase? = 
         expense.cost = inputCost.toDouble()
         expense.count = inputCount.toDouble()
         expense.date = inputDate
+        expense.payType = payType
 
         if(!isCategorySame) {
             val category = getCategoryByName(inputCategory)
