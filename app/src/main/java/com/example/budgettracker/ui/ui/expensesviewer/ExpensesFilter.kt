@@ -237,7 +237,6 @@ data class FilterOptions(
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
-        if (javaClass != other?.javaClass) return false
 
         other as FilterOptions
 
@@ -245,8 +244,8 @@ data class FilterOptions(
         if (sortBy != other.sortBy) return false
         if (sortMode != other.sortMode) return false
         if (isDataRangePresent != other.isDataRangePresent) return false
-        if (dateRange.first.toString() != other.dateRange.first.toString()) return false
-        if (dateRange.second.toString() != other.dateRange.second.toString()) return false
+        if (getGlobalSimpleDateFormat().format(dateRange.first) != getGlobalSimpleDateFormat().format(other.dateRange.first)) return false
+        if (getGlobalSimpleDateFormat().format(dateRange.second) != getGlobalSimpleDateFormat().format(other.dateRange.second)) return false
         if (sortByCategory != other.sortByCategory) return false
 
         return true

@@ -72,21 +72,17 @@ class ExpensesViewerFragment : Fragment() {
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {
-                lifecycleScope.launch {
-                    if(newText!!.isNotEmpty() && mainViewModel.allExpenses.value != null) {
-                        val matchesList = mutableListOf<Expense>()
-                        for (expense in latestExpensesList) {
-                            if(expense.isStringPresent(newText)) {
-                                matchesList.add(expense)
-                            }
+                if(newText!!.isNotEmpty() && mainViewModel.allExpenses.value != null) {
+                    val matchesList = mutableListOf<Expense>()
+                    for (expense in latestExpensesList) {
+                        if(expense.isStringPresent(newText)) {
+                            matchesList.add(expense)
                         }
-                        reloadRecyclerView(matchesList)
                     }
-                    else {
-                        reloadRecyclerView(filterViewModel.handleFiltering(
-                            mainViewModel.parseExpenses(mainViewModel.allExpenses.value!!),
-                            filterViewModel.filterOptions.value!!))
-                    }
+                    reloadRecyclerView(matchesList)
+                }
+                else {
+                    reloadRecyclerView()
                 }
                 return true
             }
@@ -107,10 +103,8 @@ class ExpensesViewerFragment : Fragment() {
         filterViewModel.filterOptions.postValue(FilterOptions())
 
         filterViewModel.filterOptions.observe (requireActivity()) {
-            lifecycleScope.launch {
-                if (mainViewModel.allExpenses.value != null) {
-                    reloadRecyclerView(filterViewModel.handleFiltering(mainViewModel.parseExpenses(mainViewModel.allExpenses.value!!), it))
-                }
+            if (mainViewModel.allExpenses.value != null) {
+                reloadRecyclerView()
             }
 
             // Change the color of the filter icon if non default filtering occurred
@@ -183,13 +177,19 @@ class ExpensesViewerFragment : Fragment() {
         }
     }
 
-    private fun reloadRecyclerView(expensesList: List<Expense>) {
-        if (binding.list.adapter == null) {
-            binding.list.adapter = ExpensesViewerAdapter(expensesList)
-        }
-        (binding.list.adapter as ExpensesViewerAdapter).updateDataSet(expensesList)
+    private fun reloadRecyclerView(expensesList: List<Expense> ?= null) {
+        lifecycleScope.launch {
+            val newExpenseList = expensesList?:
+            filterViewModel.handleFiltering(mainViewModel.parseExpenses(mainViewModel.allExpenses.value!!),
+                filterViewModel.filterOptions.value!!)
 
-        latestExpensesList = expensesList
+            if (binding.list.adapter == null) {
+                binding.list.adapter = ExpensesViewerAdapter(newExpenseList)
+            }
+            (binding.list.adapter as ExpensesViewerAdapter).updateDataSet(newExpenseList)
+
+            latestExpensesList = newExpenseList
+        }
     }
 
     private fun refreshRecyclerView() {
@@ -203,7 +203,7 @@ class ExpensesViewerFragment : Fragment() {
         refreshRecyclerView()
         if (mainViewModel.allExpenses.value != null && mainViewModel.allExpenses.value!!.isNotEmpty()) {
             lifecycleScope.launch {
-                reloadRecyclerView(mainViewModel.parseExpenses(mainViewModel.allExpenses.value!!))
+                reloadRecyclerView()
             }
         }
         super.onResume()
