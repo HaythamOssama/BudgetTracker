@@ -6,37 +6,87 @@
     android:background="@color/cardview_light_background"
     android:padding="10dp"
     android:layout_margin="4dp"
-    app:cardCornerRadius="10dp"
-    app:cardElevation="20dp"
+    app:cardCornerRadius="4dp"
+    app:cardElevation="5dp"
     app:strokeColor="#5A5A5A"
-    app:strokeWidth="1dp">
+    app:strokeWidth="1dp"
+    android:outlineSpotShadowColor="@color/teal_200">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="horizontal"
-        android:padding="15dp"
-        android:baselineAligned="false">
+        android:baselineAligned="false"
+        android:padding="10dp">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_gravity="center">
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/dayTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/day"
+                android:textSize="18sp"
+                android:gravity="center_horizontal"/>
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/monthTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/month"
+                android:textSize="16sp"
+                android:gravity="center_horizontal"
+                android:textStyle="bold"/>
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/yearTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/year"
+                android:textSize="12sp"
+                android:gravity="center_horizontal"
+                android:visibility="gone"/>
+        </LinearLayout>
+
+        <com.google.android.material.divider.MaterialDivider
+            android:layout_width="1dp"
+            android:layout_height="50dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            />
+
+        <ImageView
+            android:id="@+id/categoryImage"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_gravity="center"
+            android:layout_marginEnd="10dp"
+            android:layout_marginTop="2dp"
+            android:contentDescription="@string/category_image"
+            android:scaleType="fitCenter"/>
 
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:layout_gravity="center">
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/subcategoryTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/subcategory"
+                android:layout_marginBottom="5dp"
+                android:textSize="18sp"/>
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/categoryTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/category"
-                android:textSize="18sp"
-                android:layout_marginBottom="10dp"/>
-            <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/subcategoryTextView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/subcategory"
-                android:textSize="16sp"
+                android:textSize="14sp"
                 android:textStyle="italic"/>
 
         </LinearLayout>
@@ -46,42 +96,36 @@
             android:layout_weight="1"
             android:layout_height="wrap_content"
             android:orientation="vertical"
+            android:layout_gravity="center"
             >
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/costTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/cost"
-                android:textSize="18sp"
-                android:layout_marginBottom="10dp"
+                android:textSize="16sp"
+                android:layout_marginBottom="5dp"
                 android:textAlignment="textEnd"
                 android:textColor="@color/failed"
                 />
-            <LinearLayout
-                android:layout_width="wrap_content"
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/countTextView"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_gravity="end">
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/countTextView"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/count"
-                    android:textSize="16sp"
-                    android:textAlignment="textEnd"
-                    />
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/dateTextView"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/date"
-                    android:textSize="12sp"
-                    android:textAlignment="textEnd"
-                    android:textStyle="italic"
-                    android:layout_marginStart="10dp"
-                    />
+                android:text="@string/count"
+                android:textSize="14sp"
+                android:textAlignment="textEnd"
+                android:visibility="gone"
+                />
 
-            </LinearLayout>
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/payTypeTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/pay_type"
+                android:textSize="14sp"
+                android:textAlignment="textEnd"
+                />
 
         </LinearLayout>
     </LinearLayout>

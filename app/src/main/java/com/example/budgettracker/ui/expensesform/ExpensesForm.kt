@@ -6,6 +6,7 @@ import android.graphics.drawable.Drawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.LinearLayout
 import androidx.core.content.ContextCompat
 import com.example.budgettracker.R
@@ -18,12 +19,14 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.example.budgettracker.database.categories.Category
 import com.example.budgettracker.database.expenses.Expense
+import com.example.budgettracker.database.expenses.PayType
 import com.example.budgettracker.utils.getSerializable
 import com.github.razir.progressbutton.attachTextChangeAnimator
 import com.github.razir.progressbutton.bindProgressButton
 import com.github.razir.progressbutton.hideDrawable
 import com.github.razir.progressbutton.showDrawable
 import com.google.android.material.button.MaterialButton
+import com.google.android.material.button.MaterialButtonToggleGroup
 import com.google.android.material.textview.MaterialTextView
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -37,8 +40,10 @@ class ExpensesForm : AppCompatActivity() {
     private lateinit var subcategoryInput: SuggestionEditTextContainer
     private lateinit var costInput: SuggestionEditTextContainer
     private lateinit var countInput: SuggestionEditTextContainer
+    private lateinit var payTypeContainer: MaterialButtonToggleGroup
     private lateinit var dateInput: SuggestionEditTextContainer
     private lateinit var submitButton: MaterialButton
+    private lateinit var closeButton: ImageView
 
     private lateinit var viewModel: ExpenseFormViewModel
 
@@ -64,6 +69,9 @@ class ExpensesForm : AppCompatActivity() {
             populateEditExpenseChanges(expense)
         }
 
+        closeButton.setOnClickListener {
+            finish()
+        }
         populateDatePicker()
         populateSubmitButton()
     }
@@ -110,11 +118,14 @@ class ExpensesForm : AppCompatActivity() {
             null
         )
 
+        payTypeContainer = findViewById(R.id.payTypeChipGroup)
+
         // Set the next view when next is pressed
         costInput.editText.nextFocusDownId = R.id.countEditText
         countInput.editText.nextFocusDownId = R.id.dateEditText
 
         submitButton = findViewById(R.id.submitExpenseButton)
+        closeButton = findViewById(R.id.closeButton)
     }
 
     private fun populateSuggestionContainer(suggestionEditTextContainer: SuggestionEditTextContainer,
@@ -231,12 +242,15 @@ class ExpensesForm : AppCompatActivity() {
                 val costLiteral = costInput.editText.text.toString()
                 val countLiteral = countInput.editText.text.toString()
                 val dateLiteral = dateInput.editText.text.toString()
+                val payType = PayType.parse(findViewById<MaterialButton>(payTypeContainer.checkedButtonId).text.toString())
 
                 lifecycleScope.launch {
                     val status = if (isEditActivity) {
-                        viewModel.editExpense(expenseToBeEdited, categoryLiteral, subcategoryLiteral, costLiteral, countLiteral, dateLiteral)
+                        viewModel.editExpense(expenseToBeEdited, categoryLiteral, subcategoryLiteral, costLiteral,
+                            countLiteral, dateLiteral, payType)
                     } else {
-                        viewModel.submitExpense(categoryLiteral, subcategoryLiteral, costLiteral, countLiteral, dateLiteral)
+                        viewModel.submitExpense(categoryLiteral, subcategoryLiteral, costLiteral, countLiteral,
+                            dateLiteral, payType)
                     }
 
 

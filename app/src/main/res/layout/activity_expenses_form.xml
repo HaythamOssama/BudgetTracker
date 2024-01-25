@@ -1,186 +1,260 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.expensesform.ExpensesForm"
-    android:orientation="vertical"
-    android:padding="10dp">
+    android:orientation="vertical">
 
-    <!-- Header -->
-    <com.google.android.material.textview.MaterialTextView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/insert_expense"
-        android:textSize="30sp"
-        android:textStyle="bold"
-        android:layout_marginBottom="10dp"
-        android:id="@+id/headerTextView"/>
+        android:layout_height="?actionBarSize"
+        android:orientation="horizontal"
+        android:background="?colorPrimary">
 
-    <!-- Category Container -->
+        <ImageView
+            android:layout_width="20dp"
+            android:layout_height="?actionBarSize"
+            android:src="@drawable/x_mark_32"
+            android:layout_marginStart="16dp"
+            android:gravity="center_vertical"
+            android:id="@+id/closeButton"/>
+
+        <!-- Header -->
+        <com.google.android.material.textview.MaterialTextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="@string/insert_expense"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            android:gravity="center_vertical"
+            android:id="@+id/headerTextView"
+            android:textColor="@color/white"
+            android:layout_marginStart="20dp"/>
+
+    </LinearLayout>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:layout_marginBottom="10dp">
-        <!-- Category Edit Text -->
-        <com.google.android.material.textfield.TextInputLayout
+        android:padding="20dp">
+
+        <!-- Category Container -->
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/categoryEditTextLayout"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            app:startIconDrawable="@drawable/category_icon"
-            app:endIconMode="clear_text">
-            <com.google.android.material.textfield.TextInputEditText
+            android:orientation="vertical"
+            android:layout_marginBottom="10dp">
+            <!-- Category Edit Text -->
+            <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/category"
-                android:id="@+id/categoryEditText"
-                android:maxLines="1"
-                android:inputType="text">
-            </com.google.android.material.textfield.TextInputEditText>
-        </com.google.android.material.textfield.TextInputLayout>
-        <!-- Category Chips Layout -->
-        <HorizontalScrollView
-            android:id="@+id/categoryHorizontalScrollView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:scrollbars="none">
-            <LinearLayout
-                android:id="@+id/categoryChipsContainer"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                >
-                <!-- Chip rows will be added programmatically here -->
-            </LinearLayout>
-        </HorizontalScrollView>
-    </LinearLayout>
-
-    <!-- Subcategory Container -->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_marginBottom="10dp">
-        <!-- Category Edit Text -->
-        <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/subcategoryEditTextLayout"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            app:startIconDrawable="@drawable/subcategory_icon"
-            android:singleLine="true"
-            app:endIconMode="clear_text">
-            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/categoryEditTextLayout"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                app:startIconDrawable="@drawable/category_icon"
+                app:endIconMode="clear_text">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/category"
+                    android:id="@+id/categoryEditText"
+                    android:maxLines="1"
+                    android:inputType="text">
+                </com.google.android.material.textfield.TextInputEditText>
+            </com.google.android.material.textfield.TextInputLayout>
+            <!-- Category Chips Layout -->
+            <HorizontalScrollView
+                android:id="@+id/categoryHorizontalScrollView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/subcategory"
-                android:id="@+id/subcategoryEditText"
-                android:maxLines="1"
-                android:inputType="text">
-            </com.google.android.material.textfield.TextInputEditText>
-        </com.google.android.material.textfield.TextInputLayout>
-        <!-- Subcategory Chips Layout -->
-        <HorizontalScrollView
-            android:id="@+id/subcategoryHorizontalScrollView"
+                android:scrollbars="none">
+                <LinearLayout
+                    android:id="@+id/categoryChipsContainer"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    >
+                    <!-- Chip rows will be added programmatically here -->
+                </LinearLayout>
+            </HorizontalScrollView>
+        </LinearLayout>
+
+        <!-- Subcategory Container -->
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:scrollbars="none">
-            <LinearLayout
-                android:id="@+id/subcategoryChipsContainer"
-                android:layout_width="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginBottom="10dp">
+            <!-- Category Edit Text -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
-                <!-- Chip rows will be added programmatically here -->
-            </LinearLayout>
-        </HorizontalScrollView>
-    </LinearLayout>
+                android:id="@+id/subcategoryEditTextLayout"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                app:startIconDrawable="@drawable/subcategory_icon"
+                android:singleLine="true"
+                app:endIconMode="clear_text">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/subcategory"
+                    android:id="@+id/subcategoryEditText"
+                    android:maxLines="1"
+                    android:inputType="text">
+                </com.google.android.material.textfield.TextInputEditText>
+            </com.google.android.material.textfield.TextInputLayout>
+            <!-- Subcategory Chips Layout -->
+            <HorizontalScrollView
+                android:id="@+id/subcategoryHorizontalScrollView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:scrollbars="none">
+                <LinearLayout
+                    android:id="@+id/subcategoryChipsContainer"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+                    <!-- Chip rows will be added programmatically here -->
+                </LinearLayout>
+            </HorizontalScrollView>
+        </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:baselineAligned="false">
-
-        <!-- Cost Edit Text -->
-        <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="0dp"
-            android:layout_weight="1"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/costEditTextLayout"
+            android:orientation="horizontal"
+            android:baselineAligned="false"
+            android:layout_marginBottom="10dp">
+
+            <!-- Cost Edit Text -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:id="@+id/costEditTextLayout"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                app:startIconDrawable="@drawable/cost_icon"
+                android:singleLine="true"
+                app:endIconMode="clear_text"
+                android:layout_marginEnd="5dp">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/cost"
+                    android:id="@+id/costEditText"
+                    android:maxLines="1"
+                    android:inputType="numberDecimal">
+                </com.google.android.material.textfield.TextInputEditText>
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <!-- Count Edit Text -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:id="@+id/countEditTextLayout"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                app:startIconDrawable="@drawable/count_icon"
+                android:singleLine="true"
+                app:endIconMode="clear_text"
+                android:layout_marginStart="5dp">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/count"
+                    android:id="@+id/countEditText"
+                    android:maxLines="1"
+                    android:inputType="numberDecimal">
+                </com.google.android.material.textfield.TextInputEditText>
+            </com.google.android.material.textfield.TextInputLayout>
+        </LinearLayout>
+
+
+        <com.google.android.material.button.MaterialButtonToggleGroup
+            android:id="@+id/payTypeChipGroup"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            app:singleSelection="true"
+            app:checkedButton="@+id/cashChip"
+            >
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/cashChip"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:text="@string/cash"
+                style="?attr/materialButtonOutlinedStyle"
+                android:textColor="@color/white"
+                app:icon="@drawable/banknotes_32"
+                app:iconSize="20dp"
+                android:padding="15dp"
+                />
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/debitChip"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:text="@string/debit"
+                style="?attr/materialButtonOutlinedStyle"
+                android:textColor="@color/white"
+                app:icon="@drawable/credit_card_6_32"
+                app:iconSize="20dp"
+                android:padding="15dp"
+                />
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/creditChip"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:text="@string/credit"
+                style="?attr/materialButtonOutlinedStyle"
+                android:textColor="@color/white"
+                app:icon="@drawable/credit_card_6_32"
+                app:iconSize="20dp"
+                android:padding="15dp"
+                />
+
+        </com.google.android.material.button.MaterialButtonToggleGroup>
+
+        <!-- Date Edit Text -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/dateEditTextLayout"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            app:startIconDrawable="@drawable/cost_icon"
+            app:startIconDrawable="@drawable/calendar_icon"
             android:singleLine="true"
             app:endIconMode="clear_text"
-            android:layout_marginEnd="5dp">
+            android:layout_marginTop="10dp"
+            >
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/cost"
-                android:id="@+id/costEditText"
+                android:hint="@string/date"
+                android:id="@+id/dateEditText"
                 android:maxLines="1"
-                android:inputType="numberDecimal">
+                android:inputType="text"
+                android:focusableInTouchMode="false">
             </com.google.android.material.textfield.TextInputEditText>
         </com.google.android.material.textfield.TextInputLayout>
 
-        <!-- Count Edit Text -->
-        <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:id="@+id/countEditTextLayout"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            app:startIconDrawable="@drawable/count_icon"
-            android:singleLine="true"
-            app:endIconMode="clear_text"
-            android:layout_marginStart="5dp">
-            <com.google.android.material.textfield.TextInputEditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/count"
-                android:id="@+id/countEditText"
-                android:maxLines="1"
-                android:inputType="numberDecimal">
-            </com.google.android.material.textfield.TextInputEditText>
-        </com.google.android.material.textfield.TextInputLayout>
-    </LinearLayout>
-
-    <!-- Date Edit Text -->
-    <com.google.android.material.textfield.TextInputLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/dateEditTextLayout"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-        app:startIconDrawable="@drawable/calendar_icon"
-        android:singleLine="true"
-        app:endIconMode="clear_text"
-        android:layout_marginTop="10dp"
-        >
-        <com.google.android.material.textfield.TextInputEditText
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/date"
-            android:id="@+id/dateEditText"
-            android:maxLines="1"
-            android:inputType="text"
-            android:focusableInTouchMode="false">
-        </com.google.android.material.textfield.TextInputEditText>
-    </com.google.android.material.textfield.TextInputLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginTop="10dp">
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/submitExpenseButton"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:text="@string/submit_expense"
-            style="@style/Widget.AppCompat.Button.Colored"/>
+            android:orientation="horizontal"
+            android:layout_marginTop="10dp">
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/submitExpenseButton"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:text="@string/submit_expense"
+                style="@style/Widget.AppCompat.Button.Colored"/>
+        </LinearLayout>
     </LinearLayout>
 
 </LinearLayout>

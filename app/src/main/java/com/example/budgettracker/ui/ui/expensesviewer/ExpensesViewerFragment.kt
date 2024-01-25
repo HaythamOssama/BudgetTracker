@@ -1,13 +1,11 @@
 package com.example.budgettracker.ui.ui.expensesviewer
 
-import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.SearchView.OnQueryTextListener
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -22,6 +20,8 @@ import com.example.budgettracker.ui.MainActivity
 import com.example.budgettracker.ui.expensesform.ExpensesForm
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.coroutines.launch
+import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEvent
+
 
 class ExpensesViewerFragment : Fragment() {
 
@@ -35,68 +35,103 @@ class ExpensesViewerFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View
     {
         mainViewModel = ViewModelProvider(this)[ExpensesViewerViewModel::class.java]
-        filterViewModel = ViewModelProvider(this)[ExpensesFilterViewModel::class.java]
+        filterViewModel = ViewModelProvider(requireActivity())[ExpensesFilterViewModel::class.java]
 
         _binding = FragmentExpensesViewerBinding.inflate(inflater, container, false)
         styleRecyclerView()
 
         observeSearchEditText()
+        observeExpenses()
+        observeFilterChanges()
 
-        mainViewModel.allExpenses.observe (requireActivity()) {unparsedExpenses ->
-            lifecycleScope.launch {
-                val parsedExpenses = mainViewModel.parseExpenses(unparsedExpenses)
-                reloadRecyclerView(parsedExpenses)
-            }
-        }
-
-        binding.fabInsertExpense.setOnClickListener {
+        binding.insertButton.setOnClickListener {
             val intent = Intent(requireContext(), ExpensesForm::class.java)
             intent.putExtra("Action", "Insert")
             startActivity(intent)
         }
 
-        binding.list.scrollListener = onListScrollListener
-
-        binding.searchView.registerFilterAction {
-            val modalBottomSheet = ExpensesFilter {filterOptions ->
-                lifecycleScope.launch {
-                    val sortedList = filterViewModel.handleFiltering(mainViewModel, filterOptions)
-                    reloadRecyclerView(sortedList)
-                }
-            }
-
+        binding.filterButton.setOnClickListener {
+            val modalBottomSheet = ExpensesFilter()
             modalBottomSheet.show(requireParentFragment().parentFragmentManager, ExpensesFilter.TAG)
-
         }
+
         return binding.root
     }
 
     private fun observeSearchEditText() {
-        binding.searchView.searchEditText.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+        // clear focus when keyboard is closed
+        KeyboardVisibilityEvent.setEventListener(requireActivity()) { isOpen ->
+            if (!isOpen) {
+                binding.searchButton.clearFocus()
+            }
+        }
+        binding.searchButton.setOnQueryTextListener(object: OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                binding.searchButton.clearFocus()
+                return true
             }
 
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                lifecycleScope.launch {
-                    if(s.toString().isNotEmpty()) {
-                        val currentExpenses = mainViewModel.allExpenses.value!!
-                        val matchesList = mutableListOf<Expense>()
-                        for (expense in mainViewModel.parseExpenses(currentExpenses)) {
-                            if(expense.isStringPresent(s.toString())) {
-                                matchesList.add(expense)
-                            }
+            override fun onQueryTextChange(newText: String?): Boolean {
+                if(newText!!.isNotEmpty() && mainViewModel.allExpenses.value != null) {
+                    val matchesList = mutableListOf<Expense>()
+                    for (expense in latestExpensesList) {
+                        if(expense.isStringPresent(newText)) {
+                            matchesList.add(expense)
                         }
-                        reloadRecyclerView(matchesList)
                     }
-                    else {
-                        reloadRecyclerView(mainViewModel.parseExpenses(mainViewModel.allExpenses.value!!))
-                    }
+                    reloadRecyclerView(matchesList)
                 }
-            }
-
-            override fun afterTextChanged(s: Editable?) {
+                else {
+                    reloadRecyclerView()
+                }
+                return true
             }
         })
+    }
+
+    private fun observeExpenses() {
+        mainViewModel.allExpenses.observe (requireActivity()) {unparsedExpenses ->
+            lifecycleScope.launch {
+                val parsedExpenses = mainViewModel.parseExpenses(unparsedExpenses)
+                reloadRecyclerView(filterViewModel.handleFiltering(parsedExpenses, filterViewModel.filterOptions.value!!))
+            }
+        }
+    }
+
+    @Suppress("DEPRECATION")
+    private fun observeFilterChanges() {
+        filterViewModel.filterOptions.postValue(FilterOptions())
+
+        filterViewModel.filterOptions.observe (requireActivity()) {
+            if (mainViewModel.allExpenses.value != null) {
+                reloadRecyclerView()
+            }
+
+            // Change the color of the filter icon if non default filtering occurred
+            if (it != FilterOptions()) {
+                binding.filterButton.setColorFilter(resources.getColor(R.color.failed))
+            }
+            else {
+                binding.filterButton.colorFilter = null
+            }
+
+        }
+    }
+
+    private fun styleRecyclerView() {
+        binding.list.itemLayoutId = R.layout.expensee_viewer_list_item
+
+        binding.list.layoutManager = LinearLayoutManager(requireContext())
+        binding.list.orientation = DragDropSwipeRecyclerView.ListOrientation.VERTICAL_LIST_WITH_VERTICAL_DRAGGING
+
+        binding.list.behindSwipedItemLayoutId = R.layout.left_menu_item
+        binding.list.behindSwipedItemSecondaryLayoutId = R.layout.right_menu_item
+
+        binding.list.disableDragDirection(DragDropSwipeRecyclerView.ListOrientation.DirectionFlag.DOWN)
+        binding.list.disableDragDirection(DragDropSwipeRecyclerView.ListOrientation.DirectionFlag.UP)
+
+        binding.list.scrollListener = onListScrollListener
+        binding.list.swipeListener = onItemSwipeListener
     }
 
     private val onListScrollListener = object : OnListScrollListener {
@@ -108,34 +143,13 @@ class ExpensesViewerFragment : Fragment() {
                 (requireActivity() as MainActivity).isBottomNavBarVisible())
             {
                 (requireActivity() as MainActivity).hideBottomNavBar()
-                binding.fabInsertExpense.hide()
             }
             else if (scrollDirection == OnListScrollListener.ScrollDirection.UP &&
                 !(requireActivity() as MainActivity).isBottomNavBarVisible())
             {
                 (requireActivity() as MainActivity).showBottomNavBar()
-                binding.fabInsertExpense.show()
             }
         }
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
-    }
-
-    private fun styleRecyclerView() {
-        binding.list.itemLayoutId = R.layout.expensee_viewer_list_item
-
-        binding.list.layoutManager = LinearLayoutManager(requireContext())
-        binding.list.orientation = DragDropSwipeRecyclerView.ListOrientation.VERTICAL_LIST_WITH_VERTICAL_DRAGGING
-        binding.list.swipeListener = onItemSwipeListener
-
-        binding.list.behindSwipedItemLayoutId = R.layout.left_menu_item
-        binding.list.behindSwipedItemSecondaryLayoutId = R.layout.right_menu_item
-
-        binding.list.disableDragDirection(DragDropSwipeRecyclerView.ListOrientation.DirectionFlag.DOWN)
-        binding.list.disableDragDirection(DragDropSwipeRecyclerView.ListOrientation.DirectionFlag.UP)
     }
 
     private val onItemSwipeListener = object : OnItemSwipeListener<Expense> {
@@ -163,21 +177,19 @@ class ExpensesViewerFragment : Fragment() {
         }
     }
 
+    private fun reloadRecyclerView(expensesList: List<Expense> ?= null) {
+        lifecycleScope.launch {
+            val newExpenseList = expensesList?:
+            filterViewModel.handleFiltering(mainViewModel.parseExpenses(mainViewModel.allExpenses.value!!),
+                filterViewModel.filterOptions.value!!)
 
-    @SuppressLint("NotifyDataSetChanged")
-    override fun onResume() {
-        // Reload the items whenever this activity is resumed
-        refreshRecyclerView()
-        super.onResume()
-    }
+            if (binding.list.adapter == null) {
+                binding.list.adapter = ExpensesViewerAdapter(newExpenseList)
+            }
+            (binding.list.adapter as ExpensesViewerAdapter).updateDataSet(newExpenseList)
 
-    private fun reloadRecyclerView(expensesList: List<Expense>) {
-        if (binding.list.adapter == null) {
-            binding.list.adapter = ExpensesViewerAdapter(expensesList)
+            latestExpensesList = newExpenseList
         }
-        (binding.list.adapter as ExpensesViewerAdapter).updateDataSet(expensesList)
-
-        latestExpensesList = expensesList
     }
 
     private fun refreshRecyclerView() {
@@ -185,4 +197,21 @@ class ExpensesViewerFragment : Fragment() {
             (binding.list.adapter as ExpensesViewerAdapter).refresh()
         }
     }
+
+    override fun onResume() {
+        // Reload the items whenever this activity is resumed
+        refreshRecyclerView()
+        if (mainViewModel.allExpenses.value != null && mainViewModel.allExpenses.value!!.isNotEmpty()) {
+            lifecycleScope.launch {
+                reloadRecyclerView()
+            }
+        }
+        super.onResume()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
 }

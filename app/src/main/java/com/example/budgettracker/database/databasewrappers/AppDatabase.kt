@@ -7,7 +7,7 @@ import com.example.budgettracker.database.categories.Category
 import com.example.budgettracker.database.expenses.Expense
 import com.example.budgettracker.database.subcategory.Subcategory
 
-@Database(entities = [Category::class, Subcategory::class, Expense::class], version = 2)
+@Database(entities = [Category::class, Subcategory::class, Expense::class], version = 3)
 abstract class AppDatabase: AppDatabaseBase() {
     companion object {
         @Volatile

@@ -2,10 +2,12 @@ package com.example.budgettracker.ui.ui.expensesviewer
 
 import android.annotation.SuppressLint
 import android.view.View
+import android.widget.ImageView
 import android.widget.TextView
 import com.ernestoyaquello.dragdropswiperecyclerview.DragDropSwipeAdapter
 import com.example.budgettracker.R
 import com.example.budgettracker.database.expenses.Expense
+import com.example.budgettracker.database.expenses.PayType
 
 class ExpensesViewerAdapter(dataSet: List<Expense> = emptyList()) : DragDropSwipeAdapter<Expense, ExpensesViewerAdapter.ViewHolder>(dataSet) {
 
@@ -14,18 +16,35 @@ class ExpensesViewerAdapter(dataSet: List<Expense> = emptyList()) : DragDropSwip
         val subcategoryTextView: TextView = itemView.findViewById(R.id.subcategoryTextView)
         val costTextView: TextView = itemView.findViewById(R.id.costTextView)
         val countTextView: TextView = itemView.findViewById(R.id.countTextView)
-        val dateTextView: TextView = itemView.findViewById(R.id.dateTextView)
+        val dayTextView: TextView = itemView.findViewById(R.id.dayTextView)
+        val monthTextView: TextView = itemView.findViewById(R.id.monthTextView)
+        val yearTextView: TextView = itemView.findViewById(R.id.yearTextView)
+        val categoryImage: ImageView = itemView.findViewById(R.id.categoryImage)
+        val payTypeTextView: TextView = itemView.findViewById(R.id.payTypeTextView)
     }
 
     override fun getViewHolder(itemView: View) = ViewHolder(itemView)
 
+    @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(item: Expense, viewHolder: ViewHolder, position: Int) {
         // Here we update the contents of the view holder's views to reflect the item's data
         viewHolder.categoryTextView.text = item.subcategory!!.category!!.name
         viewHolder.subcategoryTextView.text = item.subcategory!!.name
-        viewHolder.costTextView.text = item.cost.toString()
-        viewHolder.countTextView.text = item.count.toString()
-        viewHolder.dateTextView.text = item.date
+        viewHolder.costTextView.text = formatDecimal(item.cost)
+        viewHolder.countTextView.text = "x${formatDecimal(item.count)}"
+        viewHolder.dayTextView.text = item.date.split(" ")[0]
+        viewHolder.monthTextView.text = item.date.split(" ")[1].substring(0, 3).uppercase()
+        viewHolder.yearTextView.text = item.date.split(" ")[2]
+        viewHolder.categoryImage.setBackgroundResource(R.drawable.grocery)
+        viewHolder.payTypeTextView.text = PayType.parse(item.payType)
+    }
+
+    private fun formatDecimal(number: Double): String {
+        return if (number % 1 == 0.0) {
+            String.format("%.0f", number)
+        } else {
+            number.toString()
+        }
     }
 
     override fun getViewToTouchToStartDraggingItem(item: Expense, viewHolder: ViewHolder, position: Int): View? {

@@ -6,27 +6,72 @@
     android:layout_height="match_parent"
     tools:context=".ui.ui.expensesviewer.ExpensesFilter"
     android:orientation="vertical"
-    android:padding="10dp">
+    android:padding="20dp">
 
-    <!-- Header -->
-    <com.google.android.material.textview.MaterialTextView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/filter_expenses"
-        android:textSize="25sp"
-        android:textStyle="bold"
-        android:layout_marginBottom="10dp"
-        android:gravity="center"
-        android:id="@+id/headerTextView"/>
+        android:orientation="horizontal"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
+        >
+
+        <!-- Header -->
+        <com.google.android.material.textview.MaterialTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/filter_expenses"
+            android:textSize="20sp"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            android:id="@+id/headerTextView"
+            android:layout_gravity="center_vertical"/>
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+        <com.google.android.material.button.MaterialButtonToggleGroup
+            android:id="@+id/sortModeChipGroup"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            app:singleSelection="true"
+            >
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/ascendingChip"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/a_z"
+                style="?attr/materialButtonOutlinedStyle"
+                android:textColor="@color/white"
+                />
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/descendingChip"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/z_a"
+                style="?attr/materialButtonOutlinedStyle"
+                android:textColor="@color/white"
+                />
+        </com.google.android.material.button.MaterialButtonToggleGroup>
+    </LinearLayout>
+
+    <com.google.android.material.divider.MaterialDivider
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"/>
 
     <com.google.android.material.textview.MaterialTextView
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/sort_by"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        android:layout_marginBottom="10dp"
-        android:id="@+id/sortByTextView"/>
+        android:textColor="@color/white"
+        android:textSize="18sp"
+        android:id="@+id/sortByTextView"
+        android:layout_gravity="center_vertical"
+        android:layout_marginBottom="5dp"/>
 
     <com.google.android.material.chip.ChipGroup
         android:layout_width="match_parent"
@@ -38,52 +83,62 @@
             android:layout_height="wrap_content"
             android:text="@string/date"
             android:id="@+id/dateChip"
-            android:checkable="true"/>
+            style="@style/AppChip"/>
+
         <com.google.android.material.chip.Chip
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/cost"
             android:id="@+id/costChip"
-            android:checkable="true"/>
+            style="@style/AppChip"/>
 
         <com.google.android.material.chip.Chip
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/count"
             android:id="@+id/countChip"
-            android:checkable="true"/>
+            style="@style/AppChip"/>
 
     </com.google.android.material.chip.ChipGroup>
 
-    <com.google.android.material.chip.ChipGroup
+    <com.google.android.material.divider.MaterialDivider
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:singleSelection="true"
-        android:id="@+id/sortModeChipGroup"
-        app:checkedChip="@+id/descendingChip">
-        <com.google.android.material.chip.Chip
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/ascendingly"
-            android:id="@+id/ascendingChip"
-            android:checkable="true"/>
-        <com.google.android.material.chip.Chip
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/descendingly"
-            android:id="@+id/descendingChip"
-            android:checkable="true"/>
-
-    </com.google.android.material.chip.ChipGroup>
+        android:layout_height="1dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"/>
 
     <com.google.android.material.textview.MaterialTextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/sort_by_category"
+        android:textColor="@color/white"
+        android:textSize="18sp"
+        android:id="@+id/sortByCategoryTextView"
+        android:layout_gravity="center_vertical"
+        android:layout_marginBottom="5dp"/>
+
+    <!-- Category Chips Layout -->
+    <HorizontalScrollView
+        android:id="@+id/categoryHorizontalScrollView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/date_range"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        android:layout_marginBottom="10dp"
-        android:id="@+id/datesRangeTextView"/>
+        android:scrollbars="none">
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/categoryChipsContainer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:singleSelection="true"
+            >
+            <!-- Chip rows will be added programmatically here -->
+        </com.google.android.material.chip.ChipGroup>
+    </HorizontalScrollView>
+
+    <com.google.android.material.divider.MaterialDivider
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"/>
 
     <!-- Date Edit Text -->
     <com.google.android.material.textfield.TextInputLayout
@@ -94,25 +149,48 @@
         app:startIconDrawable="@drawable/calendar_icon"
         android:singleLine="true"
         app:endIconMode="clear_text"
-        android:layout_marginTop="10dp"
         >
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/or_specify_dates_range"
+            android:hint="@string/specify_dates_range"
             android:id="@+id/dateRangeEditText"
             android:maxLines="1"
             android:inputType="text"
+            android:textColor="@color/white"
             android:focusableInTouchMode="false">
         </com.google.android.material.textfield.TextInputEditText>
     </com.google.android.material.textfield.TextInputLayout>
 
+    <com.google.android.material.divider.MaterialDivider
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"/>
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/applyFilterButton"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/apply_filters"
-        style="@style/Widget.AppCompat.Button.Colored" />
+        android:orientation="horizontal">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/resetFilterButton"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="@string/reset_filters"
+            style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
+            android:layout_marginEnd="10dp"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/applyFilterButton"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="@string/apply_filters"
+            style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
+            android:layout_marginStart="10dp"/>
+    </LinearLayout>
+
 
 </LinearLayout>

@@ -6,37 +6,62 @@
     android:layout_height="match_parent"
     tools:context=".ui.ui.expensesviewer.ExpensesViewerFragment"
     android:orientation="vertical"
+    android:animateLayoutChanges="true"
     >
 
-    <com.example.budgettracker.ui.ui.expensesviewer.SearchView
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/searchView"/>
+        android:layout_height="50dp"
+        android:layout_margin="10dp"
+        app:cardBackgroundColor="@color/teal_700"
+        app:cardCornerRadius="5dp"
+        android:animateLayoutChanges="true" >
 
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:padding="5dp"
-        >
-        <com.ernestoyaquello.dragdropswiperecyclerview.DragDropSwipeRecyclerView
-            android:id="@+id/list"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="50dp"
+            android:orientation="horizontal">
 
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/fabInsertExpense"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:clickable="true"
-            android:contentDescription="@string/insert_expense"
-            android:src="@drawable/insert_expense_icon"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:focusable="true"
-            android:layout_marginBottom="60dp"
-            android:layout_marginEnd="16dp"
-            android:layout_gravity="end|bottom"
-            />
-    </FrameLayout>
+            <SearchView
+                android:id="@+id/searchButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1"
+                android:iconifiedByDefault="false"
+                android:queryBackground="@android:color/transparent"
+                android:queryHint="Search for expense" />
+
+            <ImageView
+                android:id="@+id/filterButton"
+                android:layout_width="25dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
+                android:layout_marginEnd="20dp"
+                android:src="@drawable/filled_filter_32"
+                android:contentDescription="@string/filter_expenses" />
+
+            <ImageView
+                android:id="@+id/insertButton"
+                android:layout_width="25dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
+                android:layout_marginEnd="20dp"
+                android:src="@drawable/plus_6_32"
+                android:contentDescription="@string/insert_expense" />
+
+        </LinearLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+
+
+    <com.ernestoyaquello.dragdropswiperecyclerview.DragDropSwipeRecyclerView
+        android:id="@+id/list"
+        android:layout_marginStart="7dp"
+        android:layout_marginEnd="7dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
 
 </LinearLayout>

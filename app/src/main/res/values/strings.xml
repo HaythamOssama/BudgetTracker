@@ -21,7 +21,7 @@
     <string name="count">Count</string>
     <string name="insert_expense_success">Expense Inserted Successfully</string>
     <string name="insert_expense_failed">Error Inserting Expense</string>
-    <string name="menu_expenses_viewer">Expenses Viewer</string>
+    <string name="menu_expenses_viewer">Expenses</string>
     <string name="delete_expense">Delete Expense</string>
     <string name="edit_expense">Edit Expense</string>
     <string name="filter_expenses">Filter Expenses</string>
@@ -30,5 +30,18 @@
     <string name="ascendingly">Ascendingly</string>
     <string name="descendingly">Descendingly</string>
     <string name="date_range">Date Range</string>
-    <string name="or_specify_dates_range">Or Specify Dates Range</string>
+    <string name="specify_dates_range">Specify Dates Range</string>
+    <string name="day">Day</string>
+    <string name="month">MON</string>
+    <string name="year">Year</string>
+    <string name="category_image">Category Image</string>
+    <string name="search_for_expense">Search for Expense</string>
+    <string name="reset_filters">Reset Filters</string>
+    <string name="a_z">A-Z</string>
+    <string name="z_a">Z-A</string>
+    <string name="sort_by_category">Sort by Category</string>
+    <string name="cash">Cash</string>
+    <string name="debit">Debit</string>
+    <string name="credit">Credit</string>
+    <string name="pay_type">Pay Type</string>
 </resources>
