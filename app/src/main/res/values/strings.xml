@@ -30,10 +30,13 @@
     <string name="ascendingly">Ascendingly</string>
     <string name="descendingly">Descendingly</string>
     <string name="date_range">Date Range</string>
-    <string name="or_specify_dates_range">Or Specify Dates Range</string>
+    <string name="specify_dates_range">Specify Dates Range</string>
     <string name="day">Day</string>
     <string name="month">MON</string>
     <string name="year">Year</string>
     <string name="category_image">Category Image</string>
     <string name="search_for_expense">Search for Expense</string>
+    <string name="reset_filters">Reset Filters</string>
+    <string name="a_z">A-Z</string>
+    <string name="z_a">Z-A</string>
 </resources>
