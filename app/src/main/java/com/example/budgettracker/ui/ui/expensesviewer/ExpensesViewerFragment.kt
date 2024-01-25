@@ -21,7 +21,6 @@ import com.example.budgettracker.ui.expensesform.ExpensesForm
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.coroutines.launch
 import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEvent
-import java.util.Date
 
 
 class ExpensesViewerFragment : Fragment() {
@@ -75,9 +74,8 @@ class ExpensesViewerFragment : Fragment() {
             override fun onQueryTextChange(newText: String?): Boolean {
                 lifecycleScope.launch {
                     if(newText!!.isNotEmpty() && mainViewModel.allExpenses.value != null) {
-                        val currentExpenses = mainViewModel.allExpenses.value!!
                         val matchesList = mutableListOf<Expense>()
-                        for (expense in mainViewModel.parseExpenses(currentExpenses)) {
+                        for (expense in latestExpensesList) {
                             if(expense.isStringPresent(newText)) {
                                 matchesList.add(expense)
                             }
@@ -85,7 +83,9 @@ class ExpensesViewerFragment : Fragment() {
                         reloadRecyclerView(matchesList)
                     }
                     else {
-                        reloadRecyclerView(mainViewModel.parseExpenses(mainViewModel.allExpenses.value!!))
+                        reloadRecyclerView(filterViewModel.handleFiltering(
+                            mainViewModel.parseExpenses(mainViewModel.allExpenses.value!!),
+                            filterViewModel.filterOptions.value!!))
                     }
                 }
                 return true
@@ -102,14 +102,9 @@ class ExpensesViewerFragment : Fragment() {
         }
     }
 
+    @Suppress("DEPRECATION")
     private fun observeFilterChanges() {
-        filterViewModel.filterOptions.postValue(
-            FilterOptions(
-                sortBy = FilterOptionsSortBy.SORT_BY_DATE,
-                sortMode = FilterOptionsSortMode.SORT_DESCENDING,
-                isDataRangePresent = false,
-                dateRange = Pair(Date(), Date())
-            ))
+        filterViewModel.filterOptions.postValue(FilterOptions())
 
         filterViewModel.filterOptions.observe (requireActivity()) {
             lifecycleScope.launch {
@@ -117,6 +112,15 @@ class ExpensesViewerFragment : Fragment() {
                     reloadRecyclerView(filterViewModel.handleFiltering(mainViewModel.parseExpenses(mainViewModel.allExpenses.value!!), it))
                 }
             }
+
+            // Change the color of the filter icon if non default filtering occurred
+            if (it != FilterOptions()) {
+                binding.filterButton.setColorFilter(resources.getColor(R.color.failed))
+            }
+            else {
+                binding.filterButton.colorFilter = null
+            }
+
         }
     }
 

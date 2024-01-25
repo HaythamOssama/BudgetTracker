@@ -31,10 +31,10 @@ data class Expense(
     }
 
     fun isStringPresent(item: String): Boolean {
-        return (cost.toString().contains(item) ||
-                count.toString().contains(item) ||
-                date.contains(item) ||
-                subcategory!!.name.contains(item)||
-                subcategory!!.category!!.name.contains(item))
+        return (cost.toString().contains(item, true) ||
+                count.toString().contains(item, true) ||
+                date.contains(item, true) ||
+                subcategory!!.name.contains(item, true)||
+                subcategory!!.category!!.name.contains(item, true))
     }
 }

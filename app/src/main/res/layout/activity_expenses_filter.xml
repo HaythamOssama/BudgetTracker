@@ -60,6 +60,7 @@
     <com.google.android.material.divider.MaterialDivider
         android:layout_width="match_parent"
         android:layout_height="1dp"
+        android:layout_marginTop="10dp"
         android:layout_marginBottom="10dp"/>
 
     <com.google.android.material.textview.MaterialTextView
@@ -82,34 +83,62 @@
             android:layout_height="wrap_content"
             android:text="@string/date"
             android:id="@+id/dateChip"
-            android:textSize="16sp"
-            android:checkable="true"
-            android:padding="15dp"/>
+            style="@style/AppChip"/>
+
         <com.google.android.material.chip.Chip
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/cost"
             android:id="@+id/costChip"
-            android:textSize="16sp"
-            android:checkable="true"
-            android:padding="15dp"/>
+            style="@style/AppChip"/>
 
         <com.google.android.material.chip.Chip
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/count"
             android:id="@+id/countChip"
-            android:textSize="16sp"
-            android:checkable="true"
-            android:padding="15dp"/>
+            style="@style/AppChip"/>
 
     </com.google.android.material.chip.ChipGroup>
 
     <com.google.android.material.divider.MaterialDivider
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"/>
+
+    <com.google.android.material.textview.MaterialTextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/sort_by_category"
+        android:textColor="@color/white"
+        android:textSize="18sp"
+        android:id="@+id/sortByCategoryTextView"
+        android:layout_gravity="center_vertical"
         android:layout_marginBottom="5dp"/>
+
+    <!-- Category Chips Layout -->
+    <HorizontalScrollView
+        android:id="@+id/categoryHorizontalScrollView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scrollbars="none">
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/categoryChipsContainer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:singleSelection="true"
+            >
+            <!-- Chip rows will be added programmatically here -->
+        </com.google.android.material.chip.ChipGroup>
+    </HorizontalScrollView>
+
+    <com.google.android.material.divider.MaterialDivider
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"/>
 
     <!-- Date Edit Text -->
     <com.google.android.material.textfield.TextInputLayout

@@ -1,23 +1,20 @@
 package com.example.budgettracker.ui.ui.expensesviewer
 
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
+import com.example.budgettracker.database.DatabaseRepo
 import com.example.budgettracker.database.expenses.Expense
 import com.example.budgettracker.utils.getGlobalSimpleDateFormat
 import java.text.SimpleDateFormat
-import java.util.Date
 import java.util.Locale
 
-class ExpensesFilterViewModel: ViewModel() {
+class ExpensesFilterViewModel(app: Application) : AndroidViewModel(app) {
 
-    val filterOptions = MutableLiveData(
-        FilterOptions(
-            sortBy = FilterOptionsSortBy.SORT_BY_DATE,
-            sortMode = FilterOptionsSortMode.SORT_DESCENDING,
-            isDataRangePresent = false,
-            dateRange = Pair(Date(), Date())
-        )
-    )
+    val filterOptions = MutableLiveData(FilterOptions())
+
+    private val repo = DatabaseRepo(app)
+    val allCategories = repo.allCategories
 
     fun handleFiltering(expensesToBeFiltered: List<Expense>,
                         filterOptions: FilterOptions): List<Expense>
@@ -25,6 +22,10 @@ class ExpensesFilterViewModel: ViewModel() {
         var currentExpenses = expensesToBeFiltered
         if (filterOptions.isDataRangePresent) {
             currentExpenses = currentExpenses.filter { getGlobalSimpleDateFormat().parse(it.date)!! in filterOptions.dateRange.first..filterOptions.dateRange.second }
+        }
+
+        if (filterOptions.sortByCategory != "") {
+            currentExpenses = currentExpenses.filter { it.subcategory!!.category!!.name in filterOptions.sortByCategory }
         }
 
         val sortedList = when (filterOptions.sortBy) {

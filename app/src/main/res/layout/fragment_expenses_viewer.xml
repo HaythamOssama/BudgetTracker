@@ -35,8 +35,8 @@
 
             <ImageView
                 android:id="@+id/filterButton"
-                android:layout_width="21dp"
-                android:layout_height="21dp"
+                android:layout_width="25dp"
+                android:layout_height="match_parent"
                 android:layout_gravity="center_vertical"
                 android:layout_marginEnd="20dp"
                 android:src="@drawable/filled_filter_32"
@@ -44,8 +44,8 @@
 
             <ImageView
                 android:id="@+id/insertButton"
-                android:layout_width="21dp"
-                android:layout_height="21dp"
+                android:layout_width="25dp"
+                android:layout_height="match_parent"
                 android:layout_gravity="center_vertical"
                 android:layout_marginEnd="20dp"
                 android:src="@drawable/plus_6_32"

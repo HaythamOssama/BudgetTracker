@@ -25,6 +25,7 @@ class ExpensesFilter : BottomSheetDialogFragment() {
     private lateinit var sortByChipGroup: ChipGroup
     private lateinit var sortModeChipGroup: MaterialButtonToggleGroup
     private lateinit var dateRangeEditText: TextInputEditText
+    private lateinit var categoriesChipGroup: ChipGroup
     private var startDate = Date()
     private var endDate = Date()
     private var isDataRangePresent = false
@@ -56,11 +57,17 @@ class ExpensesFilter : BottomSheetDialogFragment() {
                 FilterOptions(
                     sortBy = FilterOptionsSortBy.SORT_BY_DATE,
                     sortMode = FilterOptionsSortMode.SORT_DESCENDING,
-                    isDataRangePresent = false,
-                    dateRange = Pair(Date(), Date())
                 )
             )
             dismiss()
+        }
+
+        viewModel.allCategories.observe(requireActivity()) {
+            val allCategories = it.keys.toList().map {category -> category.name}
+            populateChipsContainer(allCategories, categoriesChipGroup)
+            if (viewModel.filterOptions.value != null) {
+                applySortByCategory(viewModel.filterOptions.value!!.sortByCategory)
+            }
         }
 
         return binding
@@ -103,12 +110,31 @@ class ExpensesFilter : BottomSheetDialogFragment() {
         dateRangeEditText.setText(getGlobalSimpleDateFormat().format(dateRange.first) + " -> " + getGlobalSimpleDateFormat().format(dateRange.second))
     }
 
+    private fun applySortByCategory(sortByCategory: String) {
+        for (i in 0 until categoriesChipGroup.childCount) {
+            if ((categoriesChipGroup.getChildAt(i) as Chip).text == sortByCategory) {
+                categoriesChipGroup.check(categoriesChipGroup.getChildAt(i).id)
+                break
+            }
+        }
+    }
+
     private fun populateViewReferences() {
         applyFilterButton = binding.findViewById(R.id.applyFilterButton)
         resetFilterButton = binding.findViewById(R.id.resetFilterButton)
         sortByChipGroup = binding.findViewById(R.id.sortByChipGroup)
         sortModeChipGroup = binding.findViewById(R.id.sortModeChipGroup)
         dateRangeEditText = binding.findViewById(R.id.dateRangeEditText)
+        categoriesChipGroup = binding.findViewById(R.id.categoryChipsContainer)
+    }
+
+    private fun populateChipsContainer(itemsNames: List<String>,
+                                       chipsContainer: ChipGroup) {
+        for (item in itemsNames) {
+            val chip = layoutInflater.inflate(R.layout.custom_chip, chipsContainer, false) as Chip
+            chip.text = item
+            chipsContainer.addView(chip)
+        }
     }
 
     @SuppressLint("SetTextI18n")
@@ -143,7 +169,12 @@ class ExpensesFilter : BottomSheetDialogFragment() {
             val selectedSortBy = parseSelectedSortChip(sortByChipGroup.checkedChipId)
             val selectedSortMode = parseSelectedSortModeChip(sortModeChipGroup.checkedButtonId)
             val dateRange = Pair(startDate, endDate)
-            viewModel.filterOptions.postValue(FilterOptions(selectedSortBy, selectedSortMode, isDataRangePresent, dateRange))
+            var selectedCategory = ""
+            if (categoriesChipGroup.checkedChipId != View.NO_ID) {
+                selectedCategory = binding.findViewById<Chip>(categoriesChipGroup.checkedChipId).text.toString()
+            }
+            viewModel.filterOptions.postValue(FilterOptions(selectedSortBy, selectedSortMode,
+                isDataRangePresent, dateRange, selectedCategory))
             dismiss()
         }
     }
@@ -190,17 +221,46 @@ class ExpensesFilter : BottomSheetDialogFragment() {
 }
 
 data class FilterOptions(
-    val sortBy: FilterOptionsSortBy,
-    val sortMode: FilterOptionsSortMode,
-    val isDataRangePresent: Boolean,
-    val dateRange: Pair<Date, Date>
+    val sortBy: FilterOptionsSortBy = FilterOptionsSortBy.SORT_BY_DATE,
+    val sortMode: FilterOptionsSortMode = FilterOptionsSortMode.SORT_DESCENDING,
+    val isDataRangePresent: Boolean = false,
+    val dateRange: Pair<Date, Date> = Pair(Date(), Date()),
+    val sortByCategory: String = "",
 ) : Serializable
 {
     override fun toString(): String{
         return "Sort By: ${sortBy.name} - Sort Mode: ${sortMode.name} - " +
                 "Is Data Range Present? ${isDataRangePresent} " +
-                "Date Range: ${getGlobalSimpleDateFormat().format(dateRange.first)} -> ${getGlobalSimpleDateFormat().format(dateRange.second)}"
+                "Date Range: ${getGlobalSimpleDateFormat().format(dateRange.first)} -> ${getGlobalSimpleDateFormat().format(dateRange.second)} " +
+                "Sort By Category: $sortByCategory"
     }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as FilterOptions
+
+        // Compare member variables
+        if (sortBy != other.sortBy) return false
+        if (sortMode != other.sortMode) return false
+        if (isDataRangePresent != other.isDataRangePresent) return false
+        if (dateRange.first.toString() != other.dateRange.first.toString()) return false
+        if (dateRange.second.toString() != other.dateRange.second.toString()) return false
+        if (sortByCategory != other.sortByCategory) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        var result = sortBy.hashCode()
+        result = 31 * result + sortMode.hashCode()
+        result = 31 * result + isDataRangePresent.hashCode()
+        result = 31 * result + dateRange.hashCode()
+        result = 31 * result + sortByCategory.hashCode()
+        return result
+    }
+
 }
 
 enum class FilterOptionsSortBy {
