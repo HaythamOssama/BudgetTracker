@@ -9,7 +9,6 @@ import androidx.room.Query
 import androidx.room.Update
 import com.example.budgettracker.database.categories.Category
 import com.example.budgettracker.database.subcategory.Subcategory
-import com.example.budgettracker.utils.VisibleForTestingOnly
 
 @Dao
 interface ExpenseDao {
@@ -28,7 +27,6 @@ interface ExpenseDao {
     @Delete
     suspend fun delete(expense: Expense): Int
 
-    @VisibleForTestingOnly
     @Query("SELECT * FROM Expenses")
     suspend fun getAll(): List<Expense>
 }

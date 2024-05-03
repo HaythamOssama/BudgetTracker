@@ -7,7 +7,6 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.example.budgettracker.database.subcategory.Subcategory
-import com.example.budgettracker.utils.VisibleForTestingOnly
 
 @Dao
 interface CategoryDao {
@@ -26,7 +25,6 @@ interface CategoryDao {
     @Delete
     suspend fun delete(category: Category): Int
 
-    @VisibleForTestingOnly
     @Query("SELECT * FROM Categories")
-    fun getAll() : List<Category>
+    suspend fun getAll() : List<Category>
 }

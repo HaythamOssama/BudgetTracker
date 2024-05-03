@@ -21,6 +21,16 @@ class DatabaseRepo(context: Context, initializedDatabase: TestingAppDatabase? = 
     val allCategories = categoryDao.getAllLive()
     val allExpenses = expenseDao.getAllLive()
 
+    // Current Objects
+    val currentCategoriesValue = ""
+    var currentExpensesValue: Map<Expense, Map<Subcategory, Category>> = mapOf()
+    init {
+
+        allExpenses.observeForever {
+            currentExpensesValue = it
+        }
+    }
+
     /*********** Category Entity Functions ***********/
     @WorkerThread
     suspend fun insertCategory(category: Category): Long {
@@ -54,6 +64,11 @@ class DatabaseRepo(context: Context, initializedDatabase: TestingAppDatabase? = 
         return categoryDao.delete(category) > 0
     }
 
+    @WorkerThread
+    suspend fun getAllCategories(): List<Category> {
+        return categoryDao.getAll()
+    }
+
     /*********** Subcategory Entity Functions ***********/
     @WorkerThread
     suspend fun insertSubcategory(subcategory: Subcategory): Long {
@@ -77,6 +92,11 @@ class DatabaseRepo(context: Context, initializedDatabase: TestingAppDatabase? = 
     @WorkerThread
     suspend fun deleteSubcategory(subcategory: Subcategory): Boolean{
         return subcategoryDao.delete(subcategory) > 0
+    }
+
+    @WorkerThread
+    suspend fun getAllSubcategories(): List<Subcategory> {
+        return subcategoryDao.getAll()
     }
 
     /*********** Expenses Entity Functions ***********/
@@ -151,5 +171,10 @@ class DatabaseRepo(context: Context, initializedDatabase: TestingAppDatabase? = 
     @WorkerThread
     suspend fun deleteExpense(expense: Expense): Boolean{
         return expenseDao.delete(expense) > 0
+    }
+
+    @WorkerThread
+    suspend fun getAllExpenses(): List<Expense> {
+        return expenseDao.getAll()
     }
 }

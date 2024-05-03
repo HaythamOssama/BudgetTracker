@@ -6,9 +6,9 @@
         android:icon="@drawable/cost_icon_raw"
         android:title="@string/menu_expenses_viewer" />
     <item
-        android:id="@+id/nav_gallery"
-        android:icon="@drawable/ic_menu_gallery"
-        android:title="@string/menu_gallery" />
+        android:id="@+id/nav_dashboard"
+        android:icon="@drawable/dashboard_icons"
+        android:title="@string/dashboard" />
     <item
         android:id="@+id/nav_slideshow"
         android:icon="@drawable/ic_menu_slideshow"
