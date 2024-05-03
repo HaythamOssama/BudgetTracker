@@ -1,5 +1,4 @@
 <resources>
-    <string name="app_name">BudgetTracker</string>
     <string name="title_activity_main">MainActivity</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
@@ -44,4 +43,7 @@
     <string name="debit">Debit</string>
     <string name="credit">Credit</string>
     <string name="pay_type">Pay Type</string>
+    <string name="dashboard">Dashboard</string>
+    <string name="backup_database">Backup Database</string>
+    <string name="backup_success">Database is backed up successfully</string>
 </resources>

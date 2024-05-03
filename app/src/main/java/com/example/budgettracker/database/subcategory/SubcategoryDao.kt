@@ -7,7 +7,6 @@ import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
 import com.example.budgettracker.database.categories.Category
-import com.example.budgettracker.utils.VisibleForTestingOnly
 
 @Dao
 interface SubcategoryDao {
@@ -32,8 +31,7 @@ interface SubcategoryDao {
     @Delete
     suspend fun delete(subcategory: Subcategory): Int
 
-    @VisibleForTestingOnly
     @Query("SELECT * FROM Subcategories")
-    fun getAll() : List<Subcategory>
+    suspend fun getAll() : List<Subcategory>
 
 }
